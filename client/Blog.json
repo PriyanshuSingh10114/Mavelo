@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "name": "Documents required for car rental",
+    "image": "/Image/blog-slide-01.jpg",
+    "date": "April 17, 2025",
+    "author": "Martin C",
+    "category": "Cars"
+  },
+  {
+    "id": "2",
+    "name": "Rental cost of sport and other cars",
+    "image": "/Image/blog-slide-02.jpg",
+    "date": "May 5, 2025",
+    "author": "Martin C",
+    "category": "Vehicles"
+  },
+  {
+    "id": "3",
+    "name": "Top 10 luxury cars to rent in 2025",
+    "image": "/Image/blog-slide-03.jpg",
+    "date": "June 12, 2025",
+    "author": "Sophia L",
+    "category": "Luxury"
+  },
+  {
+    "id": "4",
+    "name": "How to choose the right car for your trip",
+    "image": "/Image/blog-slide-04.jpg",
+    "date": "July 1, 2025",
+    "author": "John P",
+    "category": "Travel"
+  },
+  {
+    "id": "5",
+    "name": "Electric cars: The future of rentals",
+    "image": "/Image/blog-slide-05.jpg",
+    "date": "August 9, 2025",
+    "author": "Emily R",
+    "category": "Technology"
+  }
+]

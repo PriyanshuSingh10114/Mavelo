@@ -1,0 +1,134 @@
+[
+  {
+    "id": "1",
+    "name": "Lamborghini Urus",
+    "image": "/Image/cars-slide-01.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "2 Bages",
+    "price": "750",
+    "carType": "Sports Car"
+  },
+  {
+    "id": "2",
+    "name": "Aston Martin DBX",
+    "image": "/Image/cars-slide-02.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "3 Bages",
+    "price": "880",
+    "carType": "Luxury Cars"
+  },
+  {
+    "id": "3",
+    "name": "Porsche Cayenne",
+    "image": "/Image/cars-slide-03.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "3 Bages",
+    "price": "680",
+    "carType": "SUV"
+  },
+  {
+    "id": "4",
+    "name": "BMW X7",
+    "image": "/Image/cars-slide-04.jpg",
+    "door": "4",
+    "passengers": "7",
+    "transmission": "auto",
+    "Bages": "4 Bages",
+    "price": "620",
+    "carType": "SUV"
+  },
+  {
+    "id": "5",
+    "name": "Bentley Bentayga",
+    "image": "/Image/cars-slide-05.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "4 Bages",
+    "price": "950",
+    "carType": "Luxury Cars"
+  },
+  {
+    "id": "6",
+    "name": "Rolls Royce Cullinan",
+    "image": "/Image/cars-slide-06.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "5 Bages",
+    "price": "1200",
+    "carType": "Luxury Cars"
+  },
+  {
+    "id": "7",
+    "name": "Range Rover Sport",
+    "image": "/Image/cars-slide-07.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "4 Bages",
+    "price": "700",
+    "carType": "SUV"
+  },
+  {
+    "id": "8",
+    "name": "Mercedes-Benz G63 AMG",
+    "image": "/Image/cars-slide-08.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "3 Bages",
+    "price": "890",
+    "carType": "SUV"
+  },
+  {
+    "id": "9",
+    "name": "Audi Q8",
+    "image": "/Image/cars-slide-09.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "3 Bages",
+    "price": "640",
+    "carType": "SUV"
+  },
+  {
+    "id": "10",
+    "name": "Maserati Levante",
+    "image": "/Image/cars-slide-10.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "3 Bages",
+    "price": "710",
+    "carType": "Sports Car"
+  },
+  {
+    "id": "11",
+    "name": "Audi Q8",
+    "image": "/Image/cars-slide-09.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "3 Bages",
+    "price": "640",
+    "carType": "SUV"
+  },
+  {
+    "id": "12",
+    "name": "Maserati Levante",
+    "image": "/Image/cars-slide-10.jpg",
+    "door": "4",
+    "passengers": "5",
+    "transmission": "auto",
+    "Bages": "3 Bages",
+    "price": "710",
+    "carType": "Sports Car"
+  }
+]
