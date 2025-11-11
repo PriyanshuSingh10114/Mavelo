@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CarData from '../../../Cars.json';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function Cars() {
   const [visible, setVisible] = useState(4);
@@ -14,14 +15,64 @@ function Cars() {
     <>
     {/* Banner Section */}
       <div className='font-sans bg-[#121212] text-white'>
-        <div className="banner-section cars-banner-section relative flex justify-center items-center">
-          <div className="banner-section-content text-center z-10">
-            <h6 className='uppercase'>RENT NOW</h6>
-            <h1 className='text-5xl font-semibold font-bricolage text-[#f5b574]'>
-              <span className='text-white font-bricolage'>Select</span> Luxury Car
-            </h1>
+        <div 
+          className="banner-section cars-banner-section relative flex justify-center items-center h-[90vh] bg-cover bg-center"
+          style={{ backgroundImage: `url('/path/to/your/cars-banner.jpg')` }}
+        >
+          {/* Cinematic overlay for depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/60 to-transparent"></div>
+
+          {/* Animated Text Content */}
+          <div className="banner-section-content relative z-10 text-center px-6">
+            <motion.h6
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              className="uppercase tracking-[8px] text-[#f5b754] mb-3 text-sm md:text-base"
+            >
+              — Rent Now
+            </motion.h6>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+              className="text-5xl md:text-7xl font-bold font-bricolage text-white drop-shadow-lg"
+            >
+              Select <span className="text-[#f5b754]">Your Luxury Ride</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.6 }}
+              className="text-gray-300 max-w-2xl mx-auto mt-6 text-lg md:text-xl leading-relaxed"
+            >
+              Step into sophistication with <span className="text-[#f5b754] font-semibold">Mavelo</span>.  
+              Whether it’s speed, comfort, or elegance — explore our hand-picked fleet designed  
+              for those who drive in style.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.8 }}
+              className="mt-10"
+            >
+              <button
+                onClick={() => {
+                  const section = document.getElementById("car-list");
+                  if (section) section.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="bg-[#f5b754] hover:bg-white text-black font-bricolage px-10 py-4 rounded-full text-lg transition-all duration-300 hover:-translate-y-1 shadow-md"
+              >
+                View Cars&nbsp;
+                <i className="bi bi-arrow-up-right"></i>
+              </button>
+            </motion.div>
           </div>
         </div>
+
       {/* Cars Listing and Sidebar */}
         <div className='flex flex-col md:flex-row gap-8 px-4 sm:px-6 md:px-8 lg:px-[12%] xl:px-[12%] py-12'>
           <div className='w-full sticky top-0 md:w-[300px] bg-[#1a1a1a] rounded-2xl p-6 shadow-lg animate-side-left h-full'>

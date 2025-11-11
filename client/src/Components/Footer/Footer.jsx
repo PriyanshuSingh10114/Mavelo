@@ -1,49 +1,55 @@
-import React, { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/autoplay';
-import emailjs from 'emailjs-com'; // ✅ Add this if using EmailJS
+import React, { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
+import "swiper/css";
+import "swiper/css/autoplay";
 
-import brand1 from '../../Assets/brand-1.png';
-import brand2 from '../../Assets/brand-2.png';
-import brand3 from '../../Assets/brand-3.png';
-import brand4 from '../../Assets/brand-4.png';
-import brand5 from '../../Assets/brand-5.png';
-import brand6 from '../../Assets/brand-6.png';
-import brand7 from '../../Assets/brand-7.png';
+import brand1 from "../../Assets/brand-1.png";
+import brand2 from "../../Assets/brand-2.png";
+import brand3 from "../../Assets/brand-3.png";
+import brand4 from "../../Assets/brand-4.png";
+import brand5 from "../../Assets/brand-5.png";
+import brand6 from "../../Assets/brand-6.png";
+import brand7 from "../../Assets/brand-7.png";
 
 function Footer() {
-  // ✅ Add missing state and handler
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubscribe = (e) => {
+  // ✅ Backend email subscription
+  const handleSubscribe = async (e) => {
     e.preventDefault();
 
-    const templateParams = {
-      user_email: email,
-      brand_name: "Drivora Rentals",
-    };
+    try {
+      const response = await fetch("http://localhost:5000/api/email/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    // --- EmailJS Integration (You can replace with your own backend later)
-    emailjs
-      .send(
-        "YOUR_SERVICE_ID",   // e.g. service_xxx
-        "YOUR_TEMPLATE_ID",  // e.g. template_yyy
-        templateParams,
-        "YOUR_PUBLIC_KEY"    // e.g. WpQG3jDxxxxxx
-      )
-      .then(
-        () => {
-          setMessage("🎉 Thank you for subscribing! Check your inbox for confirmation.");
-          setEmail("");
-        },
-        (error) => {
-          console.error("Error sending email:", error);
-          setMessage("❌ Oops! Something went wrong. Please try again later.");
-        }
-      );
+      const data = await response.json();
+
+      if (data.success) {
+        setMessage("🎉 Thank you for subscribing! Check your inbox for confirmation.");
+        setEmail("");
+      } else {
+        setMessage("❌ Something went wrong. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setMessage("⚠️ Server unreachable. Try again later.");
+    }
+  };
+
+  // ✅ WhatsApp integration
+  const handleWhatsApp = () => {
+    const phoneNumber = "917607022340"; // <-- Replace with your business number (country code + number)
+    const text = encodeURIComponent(
+      "Hey Drivora! 😄\nI’m planning a trip soon and looking to rent a car. Can you help me find the best ride available?"
+    );
+    window.open(`https://wa.me/${phoneNumber}?text=${text}`, "_blank");
   };
 
   return (
@@ -61,16 +67,25 @@ function Footer() {
             Don't hesitate and send us a message
           </p>
 
+          {/* ✅ Buttons */}
           <div className="footer-banner-button mt-5 flex flex-col sm:flex-row justify-center gap-4">
-            <button className="bg-[#f5b754] py-4 px-14 text-lg font-bricolage rounded-full flex items-center justify-center text-black hover:-translate-y-2 hover:bg-white transition duration-300">
+            {/* WhatsApp Button */}
+            <button
+              onClick={handleWhatsApp}
+              className="bg-[#f5b754] py-4 px-14 text-lg font-bricolage rounded-full flex items-center justify-center text-black hover:-translate-y-2 hover:bg-white transition duration-300 shadow-lg hover:shadow-yellow-400/30"
+            >
               <i className="fa-brands fa-whatsapp pr-2 text-2xl"></i>
               WhatsApp
             </button>
 
-            <button className="bg-[#f5b754] py-4 px-14 text-lg font-bricolage rounded-full flex items-center justify-center text-black hover:-translate-y-2 hover:bg-white transition duration-300">
+            {/* Rent Now Button */}
+            <button onClick={() => navigate("/cars")}
+              className="bg-[#f5b754] py-4 px-14 text-lg font-bricolage rounded-full flex items-center justify-center text-black hover:-translate-y-2 hover:bg-white transition duration-300"
+            >
               Rent now
               <i className="ri-arrow-right-up-line text-2xl pl-2"></i>
             </button>
+
           </div>
         </div>
       </div>
@@ -160,7 +175,7 @@ function Footer() {
                 commodo erat nesuen.
               </p>
               <div className="flex gap-4">
-                {['facebook-f', 'x-twitter', 'linkedin'].map((icon, idx) => (
+                {["facebook-f", "x-twitter", "linkedin"].map((icon, idx) => (
                   <a
                     key={idx}
                     href="#"
@@ -178,7 +193,7 @@ function Footer() {
                 Quick Links
               </h4>
               <ul className="space-y-2 text-[#999] footer-menu relative">
-                {['About', 'Cars', 'Car Type', 'FAQ', 'Contact'].map(
+                {["About", "Cars", "Car Type", "FAQ", "Contact"].map(
                   (item, idx) => (
                     <li key={idx}>
                       <a
@@ -193,7 +208,7 @@ function Footer() {
               </ul>
             </div>
 
-            {/* Subscribe */}
+            {/* Subscribe Section */}
             <div className="flex-1">
               <h4 className="text-2xl font-semibold font-bricolage mb-4">
                 Subscribe
@@ -245,6 +260,8 @@ function Footer() {
 }
 
 export default Footer;
+
+
 
 
 

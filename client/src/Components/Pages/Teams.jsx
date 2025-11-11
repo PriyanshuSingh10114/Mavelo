@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
+import { motion } from 'framer-motion';
 
 import teams1 from '../../Assets/test-1.jpg';
 import teams2 from '../../Assets/test-2.jpg';
@@ -26,13 +27,64 @@ function Teams() {
   return (
     <>
       {/* Banner Section */}
-      <div className="banner-section teams-section relative flex justify-center items-center bg-black h-[300px]">
-        <div className="banner-section-content text-center z-10">
-          <h1 className="text-5xl font-semibold font-bricolage text-[#f5b574]">
-            <span className="text-white">About</span> our Team
-          </h1>
-        </div>
-      </div>
+<div
+  className="banner-section teams-section relative flex justify-center items-center h-[90vh] bg-cover bg-center"
+  style={{ backgroundImage: `url('/path/to/your/team-banner.jpg')` }}
+>
+  {/* Elegant gradient overlay for premium tone */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/60 to-transparent"></div>
+
+  {/* Text content */}
+  <div className="banner-section-content relative z-10 text-center px-6">
+    <motion.h6
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+      className="uppercase tracking-[8px] text-[#f5b754] mb-3 text-sm md:text-base"
+    >
+      — Meet Our Experts
+    </motion.h6>
+
+    <motion.h1
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.3 }}
+      className="text-5xl md:text-7xl font-bold font-bricolage text-white drop-shadow-lg"
+    >
+      <span className="text-[#f5b754]">Our</span> Team
+    </motion.h1>
+
+    <motion.p
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.6 }}
+      className="text-gray-300 max-w-2xl mx-auto mt-6 text-lg md:text-xl leading-relaxed"
+    >
+      The driving force behind <span className="text-[#f5b754] font-semibold">Mavelo</span> — 
+      a passionate team of automotive experts, strategists, and customer service professionals 
+      dedicated to redefining premium car rental experiences with innovation and trust.
+    </motion.p>
+
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1, delay: 0.8 }}
+      className="mt-10"
+    >
+      <button
+        onClick={() => {
+          const section = document.getElementById("team-list");
+          if (section) section.scrollIntoView({ behavior: "smooth" });
+        }}
+        className="bg-[#f5b754] hover:bg-white text-black font-bricolage px-10 py-4 rounded-full text-lg transition-all duration-300 hover:-translate-y-1 shadow-md"
+      >
+        Meet the Team&nbsp;
+        <i className="bi bi-arrow-up-right"></i>
+      </button>
+    </motion.div>
+  </div>
+</div>
+
 
       {/* Team Info Section */}
       <div className="teams-container px-[8%] 2xl:px-[18%] py-[80px] bg-[#121212] text-white flex flex-col lg:flex-row gap-12 items-center">

@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
@@ -38,6 +39,7 @@ import newsCar5 from '../../Assets/blog-slide-05.jpg'
 // ...existing code...
 
 function Index() {
+  const navigate = useNavigate();
   const [pickUpDate, setPickUpDate] = useState(null);
   const [returnDate, setReturnDate] = useState(null);
   const pickUpRef = useRef(null);
@@ -100,11 +102,22 @@ function Index() {
                 </p>
 
                 <div className="flex flex-wrap gap-5 mt-8">
-                  <button className="bg-[#f5b754] hover:bg-white text-black font-bricolage px-8 py-4 rounded-full text-lg transition-all duration-300 hover:-translate-y-1 shadow-md">
-                    View More&nbsp;
-                    <i className="bi bi-arrow-up-right"></i>
-                  </button>
-                  <button className="border border-[#f5b754] text-white hover:bg-[#f5b754] hover:text-black font-bricolage px-8 py-4 rounded-full text-lg transition-all duration-300 hover:-translate-y-1 shadow-md">
+                <button onClick={() => {
+                    const section = document.getElementById("luxury-cars");
+                    if (section) {
+                      section.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="bg-[#f5b754] hover:bg-white text-black font-bricolage px-8 py-4 rounded-full text-lg transition-all duration-300 hover:-translate-y-1 shadow-md"
+                >
+                  View More&nbsp;
+                  <i className="bi bi-arrow-up-right"></i>
+                </button>
+
+                  <button
+                    onClick={() => navigate("/cars")}
+                    className="border border-[#f5b754] text-white hover:bg-[#f5b754] hover:text-black font-bricolage px-8 py-4 rounded-full text-lg transition-all duration-300 hover:-translate-y-1 shadow-md"
+                  >
                     Rent Now&nbsp;
                     <i className="bi bi-arrow-up-right"></i>
                   </button>
@@ -430,7 +443,7 @@ function Index() {
 
 
       {/*Luxury Cars*/}
-    <div className='luxury-cars relative text-white py-[180px] bg-[#0b0b0b] overflow-hidden'>
+    <div id="luxury-cars" className='luxury-cars relative text-white py-[180px] bg-[#0b0b0b] overflow-hidden'>
       {/* Subtle golden lighting and gradient background */}
       <div className='absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#111111] z-0'></div>
       <div className='absolute left-[-100px] top-[200px] w-[400px] h-[400px] bg-[#f5b754]/10 rounded-full blur-3xl'></div>

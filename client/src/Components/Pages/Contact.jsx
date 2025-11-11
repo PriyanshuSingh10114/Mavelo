@@ -1,114 +1,176 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 function Contact() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+
+  const [status, setStatus] = useState({ loading: false, message: '' });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus({ loading: true, message: '' });
+
+    try {
+      const response = await fetch("http://localhost:5000/api/email/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setStatus({ loading: false, message: "✅ Message sent successfully!" });
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        setStatus({ loading: false, message: "❌ Failed to send message. Try again later." });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setStatus({ loading: false, message: "⚠️ Server not reachable. Try again later." });
+    }
+  };
+
   return (
     <>
       {/* Banner Section */}
-      <div className="banner-section contact-banner relative flex justify-center items-center">
-        <div className="banner-section-content text-center z-10">
-          <h6 className="uppercase font-bricolage text-[#f5b754]">Get in Touch</h6>
-          <h1 className="text-5xl font-semibold font-bricolage text-[#f5b574]">
-            <span className="text-white font-bricolage">Contact</span> Us
-          </h1>
-        </div>
-      </div>
+      <div
+        className="banner-section contact-banner relative flex justify-center items-center h-[90vh] bg-cover bg-center"
+        style={{ backgroundImage: `url('../Image/blog-slide-03.jpg')` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/60 to-transparent"></div>
 
-      {/* Contact Info Section */}
-      <div className="contact-wrapper lg:px-[12%] px-[8%] bg-[#1b1b1b] pb-[150px] pt-[100px]">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 w-full gap-12">
+        <div className="banner-section-content relative z-10 text-center px-6">
+          <motion.h6
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="uppercase tracking-[8px] text-[#f5b754] mb-3 text-sm md:text-base"
+          >
+            — Get in Touch
+          </motion.h6>
 
-          {/* Email */}
-          <div className="contact-item group overflow-hidden relative bg-[#222] cursor-pointer p-12 text-center rounded-2xl shadow-lg">
-            <i className="fa-solid fa-envelope text-[#f5b754] text-5xl mb-6 group-hover:text-black transition-colors duration-300"></i>
-            <h4 className="font-bricolage text-2xl xl:text-4xl font-semibold mb-3">Email us</h4>
-            <p className="text-[#999] text-base xl:text-xl group-hover:text-black">info@example.com</p>
-            <i className="fa-solid fa-envelope contact-item-icon"></i>
-          </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="text-5xl md:text-7xl font-bold font-bricolage text-white drop-shadow-lg"
+          >
+            <span className="text-[#f5b754]">Contact</span> Us
+          </motion.h1>
 
-          {/* Address */}
-          <div className="contact-item group overflow-hidden relative bg-[#222] cursor-pointer p-12 text-center rounded-2xl shadow-lg">
-            <i className="fa-solid fa-location-dot text-[#f5b754] text-5xl mb-6 group-hover:text-black transition-colors duration-300"></i>
-            <h4 className="font-bricolage text-2xl xl:text-4xl font-semibold mb-3">Our Address</h4>
-            <p className="text-[#999] text-base xl:text-xl group-hover:text-black">
-              NH-24, Sitapur, Uttar Pradesh
-            </p>
-            <i className="fa-solid fa-location-dot contact-item-icon"></i>
-          </div>
-
-          {/* Opening Hours */}
-          <div className="contact-item group overflow-hidden relative bg-[#222] cursor-pointer p-12 text-center rounded-2xl shadow-lg">
-            <i className="fa-solid fa-clock text-[#f5b754] text-5xl mb-6 group-hover:text-black transition-colors duration-300"></i>
-            <h4 className="font-bricolage text-2xl xl:text-4xl font-semibold mb-3">Opening Hours</h4>
-            <p className="text-[#999] text-base xl:text-xl group-hover:text-black leading-relaxed">
-              Mon - Fri: 9:00 AM - 6:00 PM <br />
-              Sat: 10:00 AM - 4:00 PM
-            </p>
-            <i className="fa-solid fa-clock contact-item-icon"></i>
-          </div>
-
-          {/* Call Us */}
-          <div className="contact-item group overflow-hidden relative bg-[#222] cursor-pointer p-12 text-center rounded-2xl shadow-lg">
-            <i className="fa-solid fa-phone text-[#f5b754] text-5xl mb-6 group-hover:text-black transition-colors duration-300"></i>
-            <h4 className="font-bricolage text-2xl xl:text-4xl font-semibold mb-3">Call us</h4>
-            <p className="text-[#999] text-base xl:text-xl group-hover:text-black">
-              +91 98765 43210
-            </p>
-            <i className="fa-solid fa-phone contact-item-icon"></i>
-          </div>
-
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-gray-300 max-w-2xl mx-auto mt-6 text-lg md:text-xl leading-relaxed"
+          >
+            We’re here to make your driving experience effortless and elegant.  
+            Reach out to <span className="text-[#f5b754] font-semibold">Mavelo</span> for inquiries, bookings, or collaborations —  
+            our team will connect with you at the speed of luxury.
+          </motion.p>
         </div>
       </div>
 
       {/* Contact Form & Map Section */}
-      <div className="lg:px-[12%] px-[8%] bg-[#1b1b1b] pb-[150px]">
-        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+      <div className="contact-section lg:px-[12%] px-[8%] bg-[#0f0f0f] py-[150px] relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#f5b75420,_transparent_70%)] pointer-events-none"></div>
 
+        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start relative z-10">
           {/* Contact Form */}
-          <div>
-            <h2 className="text-white text-3xl font-semibold mb-8 text-center">Get In Touch</h2>
-            <form className="space-y-5 contact-inputs">
+          <div className="bg-[#1a1a1a]/90 backdrop-blur-md rounded-3xl p-10 shadow-[0_0_40px_rgba(245,183,84,0.1)] transition-transform hover:-translate-y-1 duration-300">
+            <h2 className="text-[#f5b754] text-3xl md:text-4xl font-bold font-bricolage mb-2 text-center">
+              Let’s Connect
+            </h2>
+            <p className="text-gray-400 text-center mb-8 text-sm md:text-base">
+              Have a question, partnership idea, or booking inquiry?  
+              Drop us a message — our team will get back to you swiftly.
+            </p>
+
+            <form onSubmit={handleSubmit} className="space-y-5 contact-inputs">
+              {/* Name & Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Your Name"
-                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full"
+                  required
+                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full border border-transparent focus:border-[#f5b754]"
                 />
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Your Email"
-                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full"
+                  required
+                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full border border-transparent focus:border-[#f5b754]"
                 />
               </div>
 
+              {/* Number & Subject */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   placeholder="Your Number"
-                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full"
+                  required
+                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full border border-transparent focus:border-[#f5b754]"
                 />
                 <input
                   type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   placeholder="Subject"
-                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full"
+                  required
+                  className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full border border-transparent focus:border-[#f5b754]"
                 />
               </div>
 
+              {/* Message */}
               <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 placeholder="Message"
-                className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full h-40"
+                required
+                className="bg-[#222222] text-white placeholder:text-gray-400 px-5 py-4 rounded-md outline-none w-full h-40 border border-transparent focus:border-[#f5b754]"
               ></textarea>
 
-              <button
-                type="button"
-                className="bg-[#f5b754] hover:bg-[#e2a944] text-black px-14 py-4 rounded-full text-xl font-normal transition-all duration-300"
-              >
-                Submit
-              </button>
+              {/* Submit */}
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  disabled={status.loading}
+                  className="bg-[#f5b754] hover:bg-[#e2a944] text-black px-14 py-4 rounded-full text-lg font-medium tracking-wide transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,183,84,0.4)]"
+                >
+                  {status.loading ? "Sending..." : "Send Message"}&nbsp;
+                  <i className="ri-send-plane-2-line"></i>
+                </button>
+              </div>
+              {status.message && (
+                <p className="text-center text-[#f5b754] mt-4">{status.message}</p>
+              )}
             </form>
           </div>
 
           {/* Google Map */}
-          <div className="w-full h-[400px] rounded-2xl overflow-hidden">
+          <div className="w-full h-[450px] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(245,183,84,0.1)] border border-[#333] transition-transform duration-500 hover:scale-[1.02]">
             <iframe
               className="w-full h-full"
               title="Map"
@@ -117,14 +179,14 @@ function Contact() {
               loading="lazy"
             ></iframe>
           </div>
-
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Contact
+export default Contact;
+
 
 
 
