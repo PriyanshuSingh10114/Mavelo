@@ -1,15 +1,27 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import carData from '../../../Cars.json'
-
-import DatePicker from 'react-datepicker'
+import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
+import { set } from 'date-fns';
 function CarsDetails() {
   const { id } = useParams();
   const car = carData.find((c)=> c.id === id);
+  const carNames = [...new Set(carData.map((c) => c.name))];
   const [openIndex, setOpenIndex] = React.useState(null);
   const [showModal, setShowModal] = React.useState(false);
   const [showSuccessModal, setShowSuccessModal] = React.useState(false);
+  const [fullName, setFullName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [carType, setCarType] = React.useState("");
+  const [pickUpLocation, setPickUpLocation] = React.useState("");
+  const [dropOffLocation, setDropOffLocation] = React.useState("");
+  const [pickUpDate, setPickUpDate] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [returnDate, setReturnDate] = React.useState("");
+
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -46,7 +58,6 @@ function CarsDetails() {
     return <div className='text-white text-center mt-20'>Car not found</div>
   }
 
-    const [pickUpDate, setPickUpDate] = React.useState(null);
     const datePickerRef = React.useRef(null);
 
     const openCalender=()=>{
@@ -55,8 +66,6 @@ function CarsDetails() {
         }
 
     };
-
-    const [returnDate, setReturnDate] = React.useState(null);
     const returnPickerRef = React.useRef(null);
 
     const openreturnCalender=()=>{
@@ -65,6 +74,42 @@ function CarsDetails() {
         }
 
     };
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    onSubmit={handleSubmit};
+
+    const bookingData = {
+        fullName,
+        email,
+        phone,
+        carType,
+        pickUpLocation,
+        dropOffLocation,
+        pickUpDate: pickUpDate?.toLocaleDateString("en-US"),
+        returnDate: returnDate?.toLocaleDateString("en-US"),
+        notes,
+        carName: car.name,
+        carPrice: car.price,
+    };
+
+    const res = await fetch("http://localhost:5000/api/email/book-car", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bookingData),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        setShowModal(false);
+        setShowSuccessModal(true);
+    } else {
+        alert("Booking email failed.");
+    }
+    };
+
 
   return (
     
@@ -190,8 +235,8 @@ function CarsDetails() {
       </div>
 
       {showModal && (
-        <div className='fixed inset-0 z059 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4'>
-            <div className='bg-[#0d0d0d]/90 border border-[#f5b754]/30 rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden'>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center px-4">
+            <div className="bg-[#0d0d0d]/95 border border-[#f5b754]/30 rounded-2xl shadow-2xl max-w-4xl w-full z-[10000]">
                 <div className='bg-[#f5b754] px-6 py-4 flex items-center justify-between'>
                     <h2 className='text-xl font-bold text-black font-bricolage'>
                         Book Your Dream Car
@@ -201,99 +246,165 @@ function CarsDetails() {
                     </button>
                 </div>
 
-                <form className='p-6 space-y-6 my-2'
-                    onSubmit={(e)=>{
-                        e.preventDefault();
-                        setShowModal(false);
-                        setShowSuccessModal(true);
-                    }}>
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-                            <div className="relative">
-                                <input type="text" required placeholder='' className='w-full px-4 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200' />
-                                <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                    Full Name*
-                                </label>
-                            </div>
+                <form className="p-6 space-y-6 my-2" onSubmit={(e) => {
+                e.preventDefault();
+                setShowModal(false);
+                setShowSuccessModal(true);
+                }}
+                >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                            <div className="relative">
-                                <input type="email" required placeholder='' className='w-full px-4 pt-6 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200' />
-                                <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                    Email*
-                                </label>
-                            </div>
+                    {/* Full Name */}
+                    <div className="relative">
+                    <input
+                        type="text"
+                        required
+                        placeholder="Full Name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 
+                        outline-none focus:ring-2 focus:ring-[#f5b754] transition"
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Full Name*
+                    </label>
+                    </div>
 
-                            <div className="relative">
-                                <input type="tel" required placeholder='' className='w-full px-4 pt-6 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200' />
-                                <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                    Phone*
-                                </label>
-                            </div>
+                    {/* Email */}
+                    <div className="relative">
+                    <input
+                        type="email"
+                        required
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border 
+                        border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition"
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Email*
+                    </label>
+                    </div>
 
-                            <div className="relative">
+                    {/* Phone */}
+                    <div className="relative">
+                    <input
+                        type="tel"
+                        required
+                        placeholder="Phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border 
+                        border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition"
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Phone*
+                    </label>
+                    </div>
 
-                                <select required className='w-full px-4 pt-6 pb-2 pr-10 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200'></select>
-                                <option hidden>Choose your Car</option>
-                                <option hidden>Lamborghini</option>
-                                <option hidden>Rolls Royce</option>
-                                <option hidden>Bentley</option>
+                    {/* Car Type */}
+                    <div className="relative">
+                    <select
+                        required
+                        value={carType}
+                        onChange={(e) => setCarType(e.target.value)}
+                        className="w-full px-4 pt-6 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                    >
+                        <option value="" hidden>Choose your Car</option>
+                        {carNames.map((carName, index) => (
+                        <option key={index} value={carName}>{carName}</option>
+                        ))}
+                    </select>
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Car Type*
+                    </label>
+                    </div>
 
-                                <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                    Car Type*
-                                </label>
-                            </div>
+                    {/* Pick-Up Location */}
+                    <div className="relative">
+                    <select
+                        required
+                        value={pickUpLocation}
+                        onChange={(e) => setPickUpLocation(e.target.value)}
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                    >
+                        <option value="" hidden>Pick Up Location</option>
+                        <option value="Dubai">Dubai</option>
+                        <option value="Abu Dhabi">Abu Dhabi</option>
+                    </select>
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Pick-Up Location*
+                    </label>
+                    </div>
 
+                    {/* Pick-Up Date */}
+                    <div className="relative">
+                    <DatePicker
+                        selected={pickUpDate}
+                        onChange={(date) => setPickUpDate(date)}
+                        placeholderText="Select Pick-Up Date"
+                        dateFormat="dd/MM/yyyy"
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                        minDate={new Date()}
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Pick-Up Date*
+                    </label>
+                    </div>
 
-                            
-                            <div className="relative">
+                    {/* Return Date */}
+                    <div className="relative">
+                    <DatePicker
+                        selected={returnDate}
+                        onChange={(date) => setReturnDate(date)}
+                        placeholderText="Select Return Date"
+                        dateFormat="dd/MM/yyyy"
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                        minDate={pickUpDate || new Date()}
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Return Date*
+                    </label>
+                    </div>
 
-                                <select required className='w-full px-4 pt-6 pb-2 pr-10 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200'></select>
-                                <option hidden>Pick Up Location</option>
-                                <option hidden>Dubai</option>
-                                <option hidden>Abu Dhabi</option>
+                    {/* Drop-Off Location */}
+                    <div className="relative">
+                    <select
+                        required
+                        value={dropOffLocation}
+                        onChange={(e) => setDropOffLocation(e.target.value)}
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                    >
+                        <option value="" hidden>Drop off Location</option>
+                        <option value="Sharjah">Sharjah</option>
+                        <option value="Alain">Alain</option>
+                    </select>
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Drop-Off Location*
+                    </label>
+                    </div>
 
-                                <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                    Pick-Up Location*
-                                </label>
-                            </div>
+                </div>
 
-                            
-                            <div className="relative pick-date">
+                {/* Notes */}
+                <textarea
+                    rows="3"
+                    placeholder="Additional Notes"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="w-full px-4 pt-6 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                />
 
-                                <input type="date" className='w-full px-4 pt-6 pb-2 pr-10 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200'/>
-
-                                <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                    Pick-Up Date*
-                                </label>
-                            </div>
-
-                            
-                            <div className="relative">
-
-                                <select required className='w-full px-4 pt-6 pb-2 pr-10 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200'></select>
-                                <option hidden>Drop off Location</option>
-                                <option hidden>Sharjah</option>
-                                <option hidden>Alain</option>
-
-                                <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                    Drop off Location*
-                                </label>
-                            </div>
-
-                        </div>
-
-                        <div className="relative">
-
-                            <textarea rows="3" placeholder=''></textarea>
-                            <input type="date" className='w-full px-4 pt-6 pb-2 pr-10 bg-[#121212] text-white rounded-md border border-[#f5b754]/20 outline-none focus:ring-2 focus:ring-[#f5b754] transition-duration-200'/>
-
-                            <label className='absolute left-4 top-2 text-sm text-gray-400 pointer-events-none transition-all'>
-                                Additional Notes
-                            </label>
-                        </div>
-
-                        <button type="submit" className='w-full py-3 text-lg font-bold rounded-full bg-[#f5b754] text-black hover:bg-[#e5a944]'>Rent Now
-                        </button>  
+                {/* SUBMIT BUTTON - FIXED */}
+                <button
+                    type="submit"
+                    className="w-full py-3 text-lg font-bold rounded-full bg-[#f5b754] text-black hover:bg-[#e5a944]"
+                >
+                    Submit Booking
+                </button>
                 </form>
+
+
             </div>
         </div>
       )}
@@ -326,3 +437,4 @@ function CarsDetails() {
 }
 
 export default CarsDetails
+
