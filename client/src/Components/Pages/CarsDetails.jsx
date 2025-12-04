@@ -78,7 +78,6 @@ function CarsDetails() {
     const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    onSubmit={handleSubmit};
 
     const bookingData = {
         fullName,
@@ -87,28 +86,40 @@ function CarsDetails() {
         carType,
         pickUpLocation,
         dropOffLocation,
-        pickUpDate: pickUpDate?.toLocaleDateString("en-US"),
-        returnDate: returnDate?.toLocaleDateString("en-US"),
+
+        // Proper ISO format for email backend
+        pickUpDate: pickUpDate ? pickUpDate.toISOString() : "",
+        returnDate: returnDate ? returnDate.toISOString() : "",
+
         notes,
         carName: car.name,
         carPrice: car.price,
     };
 
-    const res = await fetch("http://localhost:5000/api/email/book-car", {
+    console.log("📤 Sending booking data:", bookingData);
+
+    try {
+        const res = await fetch("http://localhost:5000/api/email/book-car", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingData),
-    });
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (data.success) {
+        if (data.success) {
         setShowModal(false);
         setShowSuccessModal(true);
-    } else {
-        alert("Booking email failed.");
+        } else {
+        alert("Booking email failed: " + data.error);
+        }
+    } catch (err) {
+        alert("Network error: " + err.message);
     }
+
+    setIsSubmitting(false);
     };
+
 
 
   return (
@@ -246,11 +257,8 @@ function CarsDetails() {
                     </button>
                 </div>
 
-                <form className="p-6 space-y-6 my-2" onSubmit={(e) => {
-                e.preventDefault();
-                setShowModal(false);
-                setShowSuccessModal(true);
-                }}
+                <form className="p-6 space-y-6 my-2" 
+                onSubmit={handleSubmit}
                 >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -437,4 +445,5 @@ function CarsDetails() {
 }
 
 export default CarsDetails
+
 
