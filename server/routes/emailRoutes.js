@@ -5,111 +5,179 @@ import dotenv from "dotenv";
 dotenv.config();
 const router = express.Router();
 
-/* 
-  🔸 Common transporter setup for Gmail SMTP
-  (you can reuse this for both subscribe and contact emails)
-*/
+/* -----------------------------
+   💠 Nodemailer Transporter
+----------------------------- */
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
   secure: true,
   auth: {
-    user: process.env.SMTP_USER, // your company email
-    pass: process.env.SMTP_PASS, // your app password
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
 /* -----------------------------
-   📩 1️⃣ Newsletter Subscription Route
+   1️⃣ NEWSLETTER SUBSCRIPTION
 ----------------------------- */
 router.post("/subscribe", async (req, res) => {
   const { email } = req.body;
 
   try {
-    const mailOptions = {
+    await transporter.sendMail({
       from: `"Mavelo Rentals" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Welcome to Mavelo Rentals 🚗✨",
       html: `
-        <div style="font-family: Arial, sans-serif; color: #333;">
-          <h2>Welcome to <span style="color:#f5b754;">Mavelo Rentals!</span></h2>
-          <p>Thank you for subscribing to our updates.</p>
-          <p>We’ll keep you posted with exclusive deals, new cars, and offers tailored for you.</p>
-          <br />
-          <p>Best regards,<br/>The Mavelo Team 🚘</p>
-        </div>
+        <h2>Thanks for subscribing!</h2>
+        <p>You’ll now receive exclusive deals and luxury car updates.</p>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.log("✅ Subscription email sent to:", email);
-    res.status(200).json({ success: true, message: "Subscription email sent successfully" });
-  } catch (error) {
-    console.error("❌ Error sending subscription email:", error);
-    res.status(500).json({ success: false, message: "Failed to send subscription email" });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
 /* -----------------------------
-   💬 2️⃣ Contact Form Route
+   2️⃣ CONTACT FORM
 ----------------------------- */
 router.post("/contact", async (req, res) => {
   const { name, email, phone, subject, message } = req.body;
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ success: false, message: "Missing required fields" });
+  try {
+    // Email to company
+    await transporter.sendMail({
+      from: `"Mavelo Website" <${process.env.SMTP_USER}>`,
+      to: process.env.SMTP_USER,
+      subject: `📩 New Message from ${name}`,
+      html: `
+        <h3>New Contact Form Submission</h3>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone:</b> ${phone}</p>
+        <p><b>Subject:</b> ${subject}</p>
+        <p><b>Message:</b> ${message}</p>
+      `,
+    });
+
+    // Auto reply to customer
+    await transporter.sendMail({
+      from: `"Mavelo Rentals" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "We Received Your Message 📨",
+      html: `
+        <h2>Hello ${name.split(" ")[0]},</h2>
+        <p>Your message has been received. Our team will contact you soon.</p>
+      `,
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
+});
+
+/* -----------------------------
+   3️⃣ CAR BOOKING (MAIN FEATURE)
+----------------------------- */
+router.post("/book-car", async (req, res) => {
+  const {
+    fullName,
+    email,
+    phone,
+    carType,
+    pickUpLocation,
+    dropOffLocation,
+    pickUpDate,
+    returnDate,
+    notes,
+    carName,
+    carPrice,
+  } = req.body;
 
   try {
-    // Email to company (you)
-    const companyMailOptions = {
-      from: `"Mavelo Website" <${process.env.SMTP_USER}>`,
-      to: process.env.SMTP_USER, // send to your company email
-      subject: `📩 New Contact Message: ${subject || "No Subject"}`,
+    /* -------------------------------------------
+       1️⃣ EMAIL TO YOU (ADMIN)
+    --------------------------------------------*/
+    const adminMail = {
+      from: `"Mavelo Rentals" <${process.env.SMTP_USER}>`,
+      to: process.env.SMTP_USER,
+      subject: `📌 New Car Booking: ${carName}`,
       html: `
-        <div style="font-family: Arial, sans-serif; color: #333;">
-          <h3>New Inquiry from Mavelo Contact Form</h3>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-          <p><strong>Subject:</strong> ${subject}</p>
-          <p><strong>Message:</strong></p>
-          <p style="border-left: 3px solid #f5b754; padding-left: 10px;">${message}</p>
-          <br/>
-          <p>— Mavelo Website</p>
-        </div>
+        <h2>New Car Booking Request</h2>
+        <p><strong>Name:</strong> ${fullName}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Car Selected:</strong> ${carName} (${carType})</p>
+        <p><strong>Price Per Day:</strong> $${carPrice}</p>
+        <br/>
+        <p><strong>Pick-Up Location:</strong> ${pickUpLocation}</p>
+        <p><strong>Drop-Off Location:</strong> ${dropOffLocation}</p>
+        <p><strong>Pick-Up Date:</strong> ${pickUpDate}</p>
+        <p><strong>Return Date:</strong> ${returnDate}</p>
+        <br/>
+        <p><strong>Notes:</strong> ${notes || "None"}</p>
       `,
     };
 
-    // Auto-reply to sender
-    const userMailOptions = {
+    /* -------------------------------------------
+       2️⃣ EMAIL TO CUSTOMER (FULL BOOKING SUMMARY)
+    --------------------------------------------*/
+    const customerMail = {
       from: `"Mavelo Rentals" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: "Thank you for contacting Mavelo Rentals 📨",
+      subject: `🚗 Booking Confirmation – ${carName}`,
       html: `
-        <div style="font-family: Arial, sans-serif; color: #333;">
-          <h2>Hi ${name.split(" ")[0]},</h2>
-          <p>Thank you for reaching out to <b>Mavelo Rentals</b>.</p>
-          <p>We’ve received your message regarding <b>${subject || "your inquiry"}</b> 
-          and our team will get back to you within 24 hours.</p>
-          <br />
-          <p>Meanwhile, explore our luxury fleet or follow us on social media for exclusive updates!</p>
-          <br />
-          <p>Best regards,<br/><b>The Mavelo Team 🚘</b></p>
+        <div style="font-family:Arial;padding:20px;color:#333;">
+          <h2 style="color:#28a745;">Your Booking is Confirmed! 🎉</h2>
+
+          <p>Hello <strong>${fullName}</strong>,</p>
+
+          <p>Thank you for choosing <strong>Mavelo Rentals</strong>.  
+          Here is your complete booking summary:</p>
+
+          <hr style="border:0;border-top:1px solid #ccc; margin:15px 0;" />
+
+          <h3>🚗 Car Details</h3>
+          <p><strong>Car Name:</strong> ${carName}</p>
+          <p><strong>Car Type:</strong> ${carType}</p>
+          <p><strong>Price Per Day:</strong> $${carPrice}</p>
+
+          <h3>📍 Rental Details</h3>
+          <p><strong>Pick-Up Location:</strong> ${pickUpLocation}</p>
+          <p><strong>Drop-Off Location:</strong> ${dropOffLocation}</p>
+          <p><strong>Pick-Up Date:</strong> ${pickUpDate}</p>
+          <p><strong>Return Date:</strong> ${returnDate}</p>
+
+          <h3>👤 Your Information</h3>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+
+          <h3>📝 Additional Notes</h3>
+          <p>${notes || "No additional notes provided."}</p>
+
+          <hr style="border:0;border-top:1px solid #ccc; margin:15px 0;" />
+
+          <p>We will contact you shortly with further instructions!</p>
+
+          <p>Warm regards,<br/><strong>The Mavelo Rentals Team</strong></p>
         </div>
       `,
     };
 
     // Send both emails
-    await transporter.sendMail(companyMailOptions);
-    await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(adminMail);
+    await transporter.sendMail(customerMail);
 
-    console.log("✅ Contact form email sent by:", name);
-    res.status(200).json({ success: true, message: "Contact email sent successfully" });
+    return res.json({ success: true });
   } catch (error) {
-    console.error("❌ Error sending contact email:", error);
-    res.status(500).json({ success: false, message: "Failed to send contact email" });
+    console.error("Booking email error:", error);
+    return res.json({ success: false, error: error.message });
   }
 });
+
 
 export default router;
