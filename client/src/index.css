@@ -710,3 +710,128 @@ transition: var(--transition-regular);
 .contact-inputs textarea:focus {
   border: 1px solid var(--prim-color);
 }
+/* responsive for 540 */
+@media (max-width: 540px) {
+  nav {
+    padding: 10px 16px !important;
+  }
+
+  .menu {
+    background: #111;
+  }
+
+  .hero-title {
+    font-size: 3.2rem;
+    line-height: 1.1;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .book-option {
+    bottom: -30% !important;
+    width: 90%;
+    left: 5%;
+  }
+
+  .footer-banner {
+    height: 400px;
+  }
+
+  .teams-images {
+    height: 400px;
+  }
+}
+/* for 520 */
+@media (max-width: 520px) {
+  .hero-title {
+    font-size: 2.9rem;
+  }
+
+  .section-title,
+  .section-item-curv {
+    width: 55px;
+    height: 55px;
+  }
+
+  .our-team {
+    height: 320px;
+  }
+
+  .team-info {
+    left: 12%;
+    padding: 15px;
+  }
+}
+/* for 480 */
+@media (max-width: 480px) {
+  .hero {
+    min-height: 85vh;
+  }
+
+  .hero-title {
+    font-size: 2.6rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .book-option {
+    bottom: -35% !important;
+  }
+
+  .banner-section,
+  .contact-banner {
+    height: 420px;
+  }
+
+  .about-banner-content h1 {
+    font-size: 2rem;
+  }
+
+  .about-banner-content h6 {
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+  }
+}
+/* for 420 */
+@media (max-width: 420px) {
+  nav {
+    padding: 8px 12px !important;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .book-option {
+    bottom: -45% !important;
+    padding: 15px;
+  }
+
+  .section-title,
+  .section-item-curv {
+    width: 48px;
+    height: 48px;
+    font-size: 1rem;
+  }
+
+  .footer-banner {
+    height: 350px;
+  }
+
+  .teams-images {
+    height: 320px;
+  }
+
+  .contact-item {
+    padding: 20px;
+  }
+}
+

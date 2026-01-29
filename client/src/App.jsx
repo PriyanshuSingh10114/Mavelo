@@ -11,8 +11,8 @@ import Cars from './Components/Pages/Cars';
 import Blog from './Components/Pages/Blog';
 import Teams from './Components/Pages/Teams';
 import Contact from './Components/Pages/Contact';
-
-
+import LoginModal from './Components/Pages/LoginModal';
+import MyBookings from './Components/Pages/MyBooking';
 function App() {
 
   return (
@@ -27,7 +27,8 @@ function App() {
         <Route path='/blog' element={<Blog/>}></Route>
         <Route path='/teams' element={<Teams/>}></Route>
         <Route path='/contact' element={<Contact/>}></Route>
-        
+        <Route path="/login" element={<LoginModal />} />
+        <Route path="/my-bookings" element={<MyBookings />} />
       </Routes>
       <Footer/>
     </Router>

@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import CarData from '../../../Cars.json';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 function Cars() {
   // Filters
+  const [cars,setCars]=useState([]);
+  const [loading,setLoading]=useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
 
   // Extract categories dynamically
-  const categories = [...new Set(CarData.map(car => car.carType))];
+  useEffect(()=>{
+    fetch(`${BACKEND_URL}/api/cars`, {
+            credentials: "include",
+   })
+    .then(res=>res.json())
+    .then(data=>{
+      setCars(data.cars);
+      setLoading(false);
+    })
+    .catch(()=>{ setLoading(false);})
+  },[]);
+ const categories = [...new Set(cars.map(car => car.type))];
 
   // Filtering Logic
-  const filteredCars = CarData.filter(car => {
-    const matchesSearch = car.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = category === "" || car.carType === category;
-    const matchesPickup = pickup === "" || pickup !== "" ? true : true; // Placeholder (no pickup in JSON)
-    const matchesDropoff = dropoff === "" || dropoff !== "" ? true : true; // Placeholder
-
-    return matchesSearch && matchesCategory && matchesPickup && matchesDropoff;
-  });
+const filteredCars = cars.filter(car => {
+  const matchesSearch = car.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const matchesCategory = category === "" || car.type === category;
+  return matchesSearch && matchesCategory;
+});
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -32,7 +41,13 @@ function Cars() {
       }
     }
   }, []);
-
+  if (loading) {
+    return (
+      <div className="text-white text-center mt-40 text-xl">
+        Loading cars...
+      </div>
+    );
+  }
   return (
     <>
       {/* Banner Section */}
@@ -192,12 +207,12 @@ function Cars() {
 
               {filteredCars.map((car) => (
                 <div
-                  key={car.id}
+                  key={car._id}
                   className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl overflow-hidden
                   shadow-md hover:shadow-[#f5b754]/30 transition-all duration-300 hover:-translate-y-2"
                 >
                   <img
-                    src={car.image}
+                    src={car.image?.[0]}
                     alt={car.name}
                     className="w-full h-48 object-cover transform hover:scale-105 transition-transform duration-300"
                   />
@@ -206,16 +221,15 @@ function Cars() {
                     <h3 className="text-xl font-bold mb-3 text-white">{car.name}</h3>
 
                     <ul className="text-sm text-gray-400 space-y-1 mb-4">
-                      <li><i className="ri-door-line mr-2 text-[#f5b754]"></i>Doors: {car.door}</li>
-                      <li><i className="ri-user-line mr-2 text-[#f5b754]"></i>Passengers: {car.passengers}</li>
-                      <li><i className="ri-timer-line mr-2 text-[#f5b754]"></i>Transmission: {car.transmission}</li>
-                      <li><i className="ri-briefcase-line mr-2 text-[#f5b754]"></i>Bags: {car.Bages}</li>
+                      <li>Seats: {car.seats}</li>
+                      <li>Transmission: {car.transmission}</li>
+                      <li>Fuel: {car.fuelType}</li>
+                      <li>Location: {car.location || "—"}</li>
                     </ul>
-
                     <div className="flex justify-between items-center">
-                      <span className="text-[#f5b754] font-semibold text-lg">${car.price}/day</span>
+                      <span className="text-[#f5b754] font-semibold text-lg">${car.pricePerDay}/day</span>
 
-                      <Link to={`/car/${car.id}`}>
+                      <Link to={`/car/${car._id}`}>
                         <button className="bg-[#f5b754] text-black px-4 py-1 rounded-full text-sm hover:bg-[#f5b754]/90 transition">
                           Details
                         </button>

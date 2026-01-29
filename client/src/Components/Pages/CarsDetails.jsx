@@ -1,13 +1,10 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import carData from '../../../Cars.json'
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 import { set } from 'date-fns';
 function CarsDetails() {
   const { id } = useParams();
-  const car = carData.find((c)=> c.id === id);
-  const carNames = [...new Set(carData.map((c) => c.name))];
   const [openIndex, setOpenIndex] = React.useState(null);
   const [showModal, setShowModal] = React.useState(false);
   const [showSuccessModal, setShowSuccessModal] = React.useState(false);
@@ -21,7 +18,36 @@ function CarsDetails() {
   const [notes, setNotes] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [returnDate, setReturnDate] = React.useState("");
+  const [car,setCar]=React.useState(null);
+  const [loading,setLoading]=React.useState(true);
+  const returnPickerRef = React.useRef(null);
+  const datePickerRef = React.useRef(null);
 
+  React.useEffect(() => {
+    async function fetchCar() {
+        try {
+        const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/cars/${id}`
+        );
+        const data = await res.json();
+
+        setCar(data.car);
+        setLoading(false);
+        } catch (error) {
+        console.error("Failed to fetch car:", error);
+        setLoading(false);
+        }
+    }
+
+    fetchCar();
+    }, [id]);
+    if (loading) {
+        return <div className="text-center mt-32 text-white">Loading car...</div>;
+    }
+
+    if (!car) {
+        return <div className="text-center mt-32 text-white">Car not found</div>;
+    }
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -54,11 +80,6 @@ function CarsDetails() {
     },
   ]
 
-  if(!car){
-    return <div className='text-white text-center mt-20'>Car not found</div>
-  }
-
-    const datePickerRef = React.useRef(null);
 
     const openCalender=()=>{
         if(datePickerRef.current){
@@ -66,7 +87,7 @@ function CarsDetails() {
         }
 
     };
-    const returnPickerRef = React.useRef(null);
+
 
     const openreturnCalender=()=>{
         if(returnPickerRef.current){
@@ -76,58 +97,45 @@ function CarsDetails() {
     };
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+        e.preventDefault();
+        setIsSubmitting(true);
 
-    const bookingData = {
-        fullName,
-        email,
-        phone,
-        carType,
-        pickUpLocation,
-        dropOffLocation,
+        try {
+            const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/bookings`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                carId: car._id,
+                startDate: pickUpDate,
+                endDate: returnDate
+                })
+            }
+            );
 
-        // Proper ISO format for email backend
-        pickUpDate: pickUpDate ? pickUpDate.toISOString() : "",
-        returnDate: returnDate ? returnDate.toISOString() : "",
+            const data = await res.json();
 
-        notes,
-        carName: car.name,
-        carPrice: car.price,
-    };
+            if (!res.ok) {
+            throw new Error(data.message);
+            }
 
-    console.log("📤 Sending booking data:", bookingData);
-
-    try {
-        const res = await fetch("http://localhost:5000/api/email/book-car", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bookingData),
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-        setShowModal(false);
-        setShowSuccessModal(true);
-        } else {
-        alert("Booking email failed: " + data.error);
+            setShowModal(false);
+            setShowSuccessModal(true);
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            setIsSubmitting(false);
         }
-    } catch (err) {
-        alert("Network error: " + err.message);
-    }
-
-    setIsSubmitting(false);
     };
-
-
 
   return (
     
     <>
       <div className='bg-[#121212] text-white font-sans'>
-        <div className='relative h-[70vh] bg-cover bg-center flex items-end px-[12%] py-20' style={{backgroundImage:`url(${car.image})`}}>
-                <div className='absolute insert-0 cars-det-section'></div>
+        <div className='relative h-[70vh] bg-cover bg-center flex items-end px-[12%] py-20' style={{backgroundImage:`url(${car.image?.[0]})`}}>
+                <div className='absolute inset-0 cars-det-section'></div>
                 <div className="relative z-10 text-white">
                     <h6 className='uppercase text-1xl font-bold tracking-widest text-[#f5b754]'>Luxury Cars</h6>
                     <h1 className='text-4xl font-bold font-bricolage'>{car.name}</h1>
@@ -191,7 +199,7 @@ function CarsDetails() {
         <div className='w-full lg:w-[320px] space-y-6 bg-[#1a1a1a] rounded-2xl p-6 shadow-md h-full'>
             <div className="text-center">
                 <p className='text-xl font-bold text-[#f5b754]'>
-                    ${car.price}<span className='text-sm text-white'>/Rent Per Day</span>
+                    ${car.pricePerDay}<span className='text-sm text-white'>/Rent Per Day</span>
                 </p>
             </div>
             <ul className='space-y-3 text-sm text-gray-300'>
@@ -199,14 +207,14 @@ function CarsDetails() {
                 <li className='flex justify-between'>
                     <span>
                         <i className='ri-door-line text-[#f5b754] mr-2'/>
-                            Doors<span className="ml-1 text-white">{car.door}</span>
+                            Doors<span className="ml-1 text-white">{4}</span>
                     </span>
                 </li>
 
                 <li className='flex justify-between'>
                     <span>
                         <i className='ri-door-line text-[#f5b754] mr-2'/>
-                            Passengers<span className="ml-1 text-white">{car.passengers}</span>
+                            Passengers<span className="ml-1 text-white">{car.seats}</span>
                     </span>
                 </li>
 
@@ -220,7 +228,7 @@ function CarsDetails() {
                 <li className='flex justify-between'>
                     <span>
                         <i className='ri-door-line text-[#f5b754] mr-2'/>
-                            Luggage<span className="ml-1 text-white">{car.Bages}</span>
+                            Luggage<span className="ml-1 text-white">{3}</span>
                     </span>
                 </li>
 
@@ -312,17 +320,13 @@ function CarsDetails() {
 
                     {/* Car Type */}
                     <div className="relative">
-                    <select
-                        required
-                        value={carType}
-                        onChange={(e) => setCarType(e.target.value)}
-                        className="w-full px-4 pt-6 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
-                    >
-                        <option value="" hidden>Choose your Car</option>
-                        {carNames.map((carName, index) => (
-                        <option key={index} value={carName}>{carName}</option>
-                        ))}
-                    </select>
+                        <input
+                        type="text"
+                        value={car.name}
+                        disabled
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                        />
+
                     <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
                         Car Type*
                     </label>

@@ -1,10 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import LoginModal from '../Pages/LoginModal';
+import { getProfile } from '../../Authapi/auth';
 function Nav() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
-
+  const [showLogin, setShowLogin] = useState(false); // ✅ added
+  const[isLoggedIn,setIsLoggedIn]=useState(false);
+  useEffect(() => {
+      getProfile().then((data) => {
+        if (data?.user) {
+          setIsLoggedIn(true);
+          
+        } else {
+          setIsLoggedIn(false);
+        }
+      });
+    }, []);
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -51,8 +63,81 @@ function Nav() {
               <p className='font-semibold text-white'>546 632 4169</p>
             </div>
           </div>
+
+          {/* LOGIN BUTTON (opens modal) */}
+          {/* LOGIN / PROFILE ICON */}
+          {!isLoggedIn ? (
+            <button
+              onClick={() => setShowLogin(true)}
+              className="px-5 py-2 rounded-full bg-[#f5b754] text-black font-semibold hover:brightness-110 transition"
+            >
+              Login
+            </button>
+          ) : (
+            <div className="relative">
+              {/* Profile Icon */}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-10 h-10 rounded-full bg-[#f5b754] flex items-center justify-center text-black font-bold"
+              >
+                <i className="ri-user-3-fill text-lg"></i>
+              </button>
+
+              {/* Dropdown */}
+              {isOpen && (
+                <div className="absolute right-0 mt-3 w-44 rounded-xl bg-[#1a1a1a] shadow-lg border border-white/10">
+
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsOpen(false)}
+                    className="block px-4 py-2 text-sm text-white hover:bg-white/10"
+                  >
+                    Profile
+                  </Link>
+
+                  <Link
+                    to="/my-bookings"
+                    onClick={() => setIsOpen(false)}
+                    className="block px-4 py-2 text-sm text-white hover:bg-white/10"
+                  >
+                    My Bookings
+                  </Link>
+
+                  <button
+                    onClick={async () => {
+                      await fetch(
+                        `${import.meta.env.VITE_BACKEND_URL}/api/user/logout`,
+                        {
+                          method: "POST",
+                          credentials: "include",
+                        }
+                      );
+
+                      setIsLoggedIn(false);
+                      setIsOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/10 rounded-b-xl"
+                  >
+                    Logout
+                  </button>
+
+                </div>
+              )}
+
+            </div>
+          )}
+
+
         </div>
       </nav>
+
+      {/* LOGIN MODAL */}
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onLoginSuccess={() => setIsLoggedIn(true)}
+        />
+      )}
     </>
   )
 }
