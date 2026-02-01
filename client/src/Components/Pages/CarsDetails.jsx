@@ -1,13 +1,19 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
+<<<<<<< HEAD
 import carData from '../../../Cars.json'
+=======
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 import { set } from 'date-fns';
 function CarsDetails() {
   const { id } = useParams();
+<<<<<<< HEAD
   const car = carData.find((c)=> c.id === id);
   const carNames = [...new Set(carData.map((c) => c.name))];
+=======
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
   const [openIndex, setOpenIndex] = React.useState(null);
   const [showModal, setShowModal] = React.useState(false);
   const [showSuccessModal, setShowSuccessModal] = React.useState(false);
@@ -21,7 +27,40 @@ function CarsDetails() {
   const [notes, setNotes] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [returnDate, setReturnDate] = React.useState("");
+<<<<<<< HEAD
 
+=======
+  const [car,setCar]=React.useState(null);
+  const [loading,setLoading]=React.useState(true);
+  const returnPickerRef = React.useRef(null);
+  const datePickerRef = React.useRef(null);
+
+  React.useEffect(() => {
+    async function fetchCar() {
+        try {
+        const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/cars/${id}`
+        );
+        const data = await res.json();
+
+        setCar(data.car);
+        setLoading(false);
+        } catch (error) {
+        console.error("Failed to fetch car:", error);
+        setLoading(false);
+        }
+    }
+
+    fetchCar();
+    }, [id]);
+    if (loading) {
+        return <div className="text-center mt-32 text-white">Loading car...</div>;
+    }
+
+    if (!car) {
+        return <div className="text-center mt-32 text-white">Car not found</div>;
+    }
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -54,11 +93,14 @@ function CarsDetails() {
     },
   ]
 
+<<<<<<< HEAD
   if(!car){
     return <div className='text-white text-center mt-20'>Car not found</div>
   }
 
     const datePickerRef = React.useRef(null);
+=======
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
 
     const openCalender=()=>{
         if(datePickerRef.current){
@@ -66,7 +108,11 @@ function CarsDetails() {
         }
 
     };
+<<<<<<< HEAD
     const returnPickerRef = React.useRef(null);
+=======
+
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
 
     const openreturnCalender=()=>{
         if(returnPickerRef.current){
@@ -76,6 +122,7 @@ function CarsDetails() {
     };
 
     const handleSubmit = async (e) => {
+<<<<<<< HEAD
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -122,12 +169,47 @@ function CarsDetails() {
 
 
 
+=======
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/bookings`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                carId: car._id,
+                startDate: pickUpDate,
+                endDate: returnDate
+                })
+            }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok) {
+            throw new Error(data.message);
+            }
+
+            setShowModal(false);
+            setShowSuccessModal(true);
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
   return (
     
     <>
       <div className='bg-[#121212] text-white font-sans'>
-        <div className='relative h-[70vh] bg-cover bg-center flex items-end px-[12%] py-20' style={{backgroundImage:`url(${car.image})`}}>
-                <div className='absolute insert-0 cars-det-section'></div>
+        <div className='relative h-[70vh] bg-cover bg-center flex items-end px-[12%] py-20' style={{backgroundImage:`url(${car.image?.[0]})`}}>
+                <div className='absolute inset-0 cars-det-section'></div>
                 <div className="relative z-10 text-white">
                     <h6 className='uppercase text-1xl font-bold tracking-widest text-[#f5b754]'>Luxury Cars</h6>
                     <h1 className='text-4xl font-bold font-bricolage'>{car.name}</h1>
@@ -191,7 +273,7 @@ function CarsDetails() {
         <div className='w-full lg:w-[320px] space-y-6 bg-[#1a1a1a] rounded-2xl p-6 shadow-md h-full'>
             <div className="text-center">
                 <p className='text-xl font-bold text-[#f5b754]'>
-                    ${car.price}<span className='text-sm text-white'>/Rent Per Day</span>
+                    ${car.pricePerDay}<span className='text-sm text-white'>/Rent Per Day</span>
                 </p>
             </div>
             <ul className='space-y-3 text-sm text-gray-300'>
@@ -199,14 +281,14 @@ function CarsDetails() {
                 <li className='flex justify-between'>
                     <span>
                         <i className='ri-door-line text-[#f5b754] mr-2'/>
-                            Doors<span className="ml-1 text-white">{car.door}</span>
+                            Doors<span className="ml-1 text-white">{4}</span>
                     </span>
                 </li>
 
                 <li className='flex justify-between'>
                     <span>
                         <i className='ri-door-line text-[#f5b754] mr-2'/>
-                            Passengers<span className="ml-1 text-white">{car.passengers}</span>
+                            Passengers<span className="ml-1 text-white">{car.seats}</span>
                     </span>
                 </li>
 
@@ -220,7 +302,7 @@ function CarsDetails() {
                 <li className='flex justify-between'>
                     <span>
                         <i className='ri-door-line text-[#f5b754] mr-2'/>
-                            Luggage<span className="ml-1 text-white">{car.Bages}</span>
+                            Luggage<span className="ml-1 text-white">{3}</span>
                     </span>
                 </li>
 
@@ -312,6 +394,7 @@ function CarsDetails() {
 
                     {/* Car Type */}
                     <div className="relative">
+<<<<<<< HEAD
                     <select
                         required
                         value={carType}
@@ -403,6 +486,95 @@ function CarsDetails() {
                     className="w-full px-4 pt-6 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
                 />
 
+=======
+                        <input
+                        type="text"
+                        value={car.name}
+                        disabled
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                        />
+
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Car Type*
+                    </label>
+                    </div>
+
+                    {/* Pick-Up Location */}
+                    <div className="relative">
+                    <select
+                        required
+                        value={pickUpLocation}
+                        onChange={(e) => setPickUpLocation(e.target.value)}
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                    >
+                        <option value="" hidden>Pick Up Location</option>
+                        <option value="Dubai">Dubai</option>
+                        <option value="Abu Dhabi">Abu Dhabi</option>
+                    </select>
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Pick-Up Location*
+                    </label>
+                    </div>
+
+                    {/* Pick-Up Date */}
+                    <div className="relative">
+                    <DatePicker
+                        selected={pickUpDate}
+                        onChange={(date) => setPickUpDate(date)}
+                        placeholderText="Select Pick-Up Date"
+                        dateFormat="dd/MM/yyyy"
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                        minDate={new Date()}
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Pick-Up Date*
+                    </label>
+                    </div>
+
+                    {/* Return Date */}
+                    <div className="relative">
+                    <DatePicker
+                        selected={returnDate}
+                        onChange={(date) => setReturnDate(date)}
+                        placeholderText="Select Return Date"
+                        dateFormat="dd/MM/yyyy"
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                        minDate={pickUpDate || new Date()}
+                    />
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Return Date*
+                    </label>
+                    </div>
+
+                    {/* Drop-Off Location */}
+                    <div className="relative">
+                    <select
+                        required
+                        value={dropOffLocation}
+                        onChange={(e) => setDropOffLocation(e.target.value)}
+                        className="w-full px-4 pt-8 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                    >
+                        <option value="" hidden>Drop off Location</option>
+                        <option value="Sharjah">Sharjah</option>
+                        <option value="Alain">Alain</option>
+                    </select>
+                    <label className="absolute left-4 top-2 text-sm text-gray-400 pointer-events-none">
+                        Drop-Off Location*
+                    </label>
+                    </div>
+
+                </div>
+
+                {/* Notes */}
+                <textarea
+                    rows="3"
+                    placeholder="Additional Notes"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="w-full px-4 pt-6 pb-2 bg-[#121212] text-white rounded-md border border-[#f5b754]/20"
+                />
+
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
                 {/* SUBMIT BUTTON - FIXED */}
                 <button
                     type="submit"
@@ -445,3 +617,5 @@ function CarsDetails() {
 }
 
 export default CarsDetails
+
+

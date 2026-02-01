@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import CarData from '../../../Cars.json';
+=======
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 function Cars() {
   // Filters
+<<<<<<< HEAD
+=======
+  const [cars,setCars]=useState([]);
+  const [loading,setLoading]=useState(true);
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
 
   // Extract categories dynamically
+<<<<<<< HEAD
   const categories = [...new Set(CarData.map(car => car.carType))];
 
   // Filtering Logic
@@ -32,7 +41,44 @@ function Cars() {
       }
     }
   }, []);
+=======
+  useEffect(()=>{
+    fetch(`${BACKEND_URL}/api/cars`, {
+            credentials: "include",
+   })
+    .then(res=>res.json())
+    .then(data=>{
+      setCars(data.cars);
+      setLoading(false);
+    })
+    .catch(()=>{ setLoading(false);})
+  },[]);
+ const categories = [...new Set(cars.map(car => car.type))];
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
 
+  // Filtering Logic
+const filteredCars = cars.filter(car => {
+  const matchesSearch = car.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const matchesCategory = category === "" || car.type === category;
+  return matchesSearch && matchesCategory;
+});
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
+      }
+    }
+  }, []);
+  if (loading) {
+    return (
+      <div className="text-white text-center mt-40 text-xl">
+        Loading cars...
+      </div>
+    );
+  }
   return (
     <>
       {/* Banner Section */}
@@ -183,6 +229,7 @@ function Cars() {
           {/* Cars Grid */}
           <div className="flex-1 animate-fade-in">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-8">
+<<<<<<< HEAD
 
               {filteredCars.length === 0 && (
                 <p className="text-gray-400 text-center w-full text-lg col-span-full">
@@ -216,6 +263,40 @@ function Cars() {
                       <span className="text-[#f5b754] font-semibold text-lg">${car.price}/day</span>
 
                       <Link to={`/car/${car.id}`}>
+=======
+
+              {filteredCars.length === 0 && (
+                <p className="text-gray-400 text-center w-full text-lg col-span-full">
+                  No cars match your filters.
+                </p>
+              )}
+
+              {filteredCars.map((car) => (
+                <div
+                  key={car._id}
+                  className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl overflow-hidden
+                  shadow-md hover:shadow-[#f5b754]/30 transition-all duration-300 hover:-translate-y-2"
+                >
+                  <img
+                    src={car.image?.[0]}
+                    alt={car.name}
+                    className="w-full h-48 object-cover transform hover:scale-105 transition-transform duration-300"
+                  />
+
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold mb-3 text-white">{car.name}</h3>
+
+                    <ul className="text-sm text-gray-400 space-y-1 mb-4">
+                      <li>Seats: {car.seats}</li>
+                      <li>Transmission: {car.transmission}</li>
+                      <li>Fuel: {car.fuelType}</li>
+                      <li>Location: {car.location || "—"}</li>
+                    </ul>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#f5b754] font-semibold text-lg">${car.pricePerDay}/day</span>
+
+                      <Link to={`/car/${car._id}`}>
+>>>>>>> 3e25a73ccc4562a770357e54839940bb2ddb1968
                         <button className="bg-[#f5b754] text-black px-4 py-1 rounded-full text-sm hover:bg-[#f5b754]/90 transition">
                           Details
                         </button>

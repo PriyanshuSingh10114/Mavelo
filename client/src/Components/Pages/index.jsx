@@ -619,7 +619,7 @@ function Index() {
                 {/* Action Buttons */}
                 <div className='mt-6 flex justify-between items-center'>
                   <Link to={`/car/${car.id}`}>
-                    <button className='bg-[#f5b754] text-black px-5 py-2 rounded-full text-sm hover:bg-white transition duration-300 shadow-md hover:-translate-y-1 font-bricolage'>
+                    <button onClick={scrollTo(0,0)} className='bg-[#f5b754] text-black px-5 py-2 rounded-full text-sm hover:bg-white transition duration-300 shadow-md hover:-translate-y-1 font-bricolage'>
                       Details
                     </button>
                   </Link>
