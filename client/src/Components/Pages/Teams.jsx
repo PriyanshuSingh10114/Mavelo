@@ -104,7 +104,7 @@ function Teams() {
           </div>
 
           <p className="mt-6 text-[#999] text-lg">
-            My Email Address:{' '}
+             My Email Address:{' '}
             <a href="mailto:info@example.com" className="text-white underline">
               info@example.com
             </a>

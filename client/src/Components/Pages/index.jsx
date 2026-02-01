@@ -2,7 +2,6 @@
 import React, { useState, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
@@ -36,14 +35,25 @@ import newsCar2 from '../../Assets/blog-slide-02.jpg'
 import newsCar3 from '../../Assets/blog-slide-03.jpg'
 import newsCar4 from '../../Assets/blog-slide-04.jpg'
 import newsCar5 from '../../Assets/blog-slide-05.jpg'
+import newsCar6 from '../../Assets/blog-slide-06.jpeg'
+
+import { useNavigate } from "react-router-dom";
 // ...existing code...
 
 function Index() {
-  const navigate = useNavigate();
   const [pickUpDate, setPickUpDate] = useState(null);
   const [returnDate, setReturnDate] = useState(null);
+  const [carType, setCarType] = React.useState("");
+  const [pickupLocation, setPickupLocation] = React.useState("");
+  const [dropLocation, setDropLocation] = React.useState("");
+
+  const [isCarOpen, setIsCarOpen] = React.useState(false);
+  const [isPickupOpen, setIsPickupOpen] = React.useState(false);
+  const [isDropOpen, setIsDropOpen] = React.useState(false);
+
   const pickUpRef = useRef(null);
   const returnRef = useRef(null);
+  const navigate = useNavigate();
 
   const openCalendar = () => {
     if (pickUpRef.current && typeof pickUpRef.current.setOpen === 'function') {
@@ -59,7 +69,6 @@ function Index() {
   return (
     <>
       {/*Hero*/}
-
     <div className="hero relative w-full h-screen overflow-hidden">
       {/* --- HERO SLIDER --- */}
       <Swiper
@@ -128,115 +137,145 @@ function Index() {
         ))}
       </Swiper>
 
-{/* --- BOOKING PANEL (replace this block only) --- */}
-<div className="absolute bottom-[-70px] left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-[1200px]">
-  <div className="book-option bg-[#1a1a1a]/95 backdrop-blur-md text-white rounded-3xl px-6 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 shadow-2xl border border-[#333] items-center">
+    {/* --- BOOKING PANEL (replace this block only) --- */}
+    <div className="absolute bottom-[-70px] left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-[1200px]">
+      <div className="book-option bg-[#1a1a1a]/95 backdrop-blur-md text-white rounded-3xl px-6 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 shadow-2xl border border-[#333] items-center">
 
-    {/* 1) Car Type (dropdown) */}
-    <div className="relative px-4 py-3 group border-r border-gray-700/60">
-      <button className="flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754] transition">
-        <span>Car Type</span>
-        <i className="ri-arrow-down-s-line text-[#f5b754]"></i>
-      </button>
+    {/* Car Type */}
+        <div className="relative px-4 py-3 border-r border-gray-700/60">
+          <button
+            className="flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754]"
+            onClick={() => setIsCarOpen(!isCarOpen)}
+          >
+            <span>{carType || "Car Type"}</span>
+            <i className="ri-arrow-down-s-line text-[#f5b754]"></i>
+          </button>
 
-      <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-300 ease-out z-50">
-        <ul className="divide-y divide-gray-700">
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Sedan</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">SUV</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Convertible</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Luxury</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Compact</li>
-        </ul>
+          {isCarOpen && (
+            <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md z-50">
+              <ul className="divide-y divide-gray-700">
+                {["Sedan", "SUV", "Convertible", "Luxury", "Compact"].map((type) => (
+                  <li
+                    key={type}
+                    onClick={() => { setCarType(type); setIsCarOpen(false); }}
+                    className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer"
+                  >
+                    {type}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+        </div>
+
+        {/* Pick-Up Location */}
+        <div className="relative px-4 py-3 border-r border-gray-700/60">
+          
+          <button
+            className="flex items-center w-full justify-between text-gray-300 hover:text-[#f5b754]"
+            onClick={() => setIsPickupOpen(!isPickupOpen)}
+          >
+            <span>{pickupLocation || "Pick-Up Location"}</span>
+            <i className="ri-map-pin-line text-[#f5b754]"></i>
+          </button>
+
+          {isPickupOpen && (
+            <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md z-50">
+              <ul className="divide-y divide-gray-700">
+                {["Abu Dhabi", "Al Ain", "Dubai", "Sharjah"].map((loc) => (
+                  <li
+                    key={loc}
+                    onClick={() => { setPickupLocation(loc); setIsPickupOpen(false); }}
+                    className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer"
+                  >
+                    {loc}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+        </div>
+
+        {/* 3) Pick-Up Date */}
+        <div
+          className="relative px-4 py-3 flex items-center border-r border-gray-700/60"
+          onClick={openCalendar}
+        >
+          <DatePicker
+            selected={pickUpDate}
+            onChange={(date) => setPickUpDate(date)}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="Pick-Up Date"
+            ref={pickUpRef}
+            className={`bg-transparent text-white outline-none cursor-pointer w-full ${!pickUpDate ? 'text-gray-400' : ''}`}
+            calendarClassName="light-datepicker"
+            popperPlacement="bottom-start"
+          />
+          <i className="ri-calendar-line text-[#f5b754] pointer-events-none ml-3"></i>
+        </div>
+
+        {/* Drop-Off Location */}
+        <div className="relative px-4 py-3 border-r border-gray-700/60">
+
+          <button
+            className="flex items-center w-full justify-between text-gray-300 hover:text-[#f5b754]"
+            onClick={() => setIsDropOpen(!isDropOpen)}
+          >
+            <span>{dropLocation || "Drop-Off Location"}</span>
+            <i className="ri-map-pin-line text-[#f5b754]"></i>
+          </button>
+
+          {isDropOpen && (
+            <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md z-50">
+              <ul className="divide-y divide-gray-700">
+                {["Abu Dhabi", "Al Ain", "Dubai", "Sharjah"].map((loc) => (
+                  <li
+                    key={loc}
+                    onClick={() => { setDropLocation(loc); setIsDropOpen(false); }}
+                    className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer"
+                  >
+                    {loc}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+        </div>
+
+        {/* 5) Return Date */}
+        <div
+          className="relative px-4 py-3 flex items-center"
+          onClick={openReturnCalendar}
+        >
+          <DatePicker
+            selected={returnDate}
+            onChange={(date) => setReturnDate(date)}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="Return Date"
+            ref={returnRef}
+            className={`bg-transparent text-white outline-none cursor-pointer w-full ${!returnDate ? 'text-gray-400' : ''}`}
+            calendarClassName="light-datepicker"
+            popperPlacement="bottom-start"
+          />
+          <i className="ri-calendar-line text-[#f5b754] pointer-events-none ml-3"></i>
+        </div>
+
+        {/* 6) Search Button */}
+        <button 
+          onClick={() => navigate("/cars#cars-section")}
+          className="bg-[#f5b754] text-black font-semibold px-6 py-3 rounded-full 
+              w-full sm:w-auto hover:bg-white hover:-translate-y-1 transition-all 
+              duration-300 shadow-md font-bricolage flex items-center justify-center gap-2"
+        >
+          <i className="ri-search-line"></i>
+          Search
+        </button>
+
       </div>
     </div>
-
-    {/* 2) Pick-Up Location (dropdown) */}
-    <div className="relative px-4 py-3 group border-r border-gray-700/60">
-      <button className="flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754] transition">
-        <span>Pick-Up Location</span>
-        <i className="ri-map-pin-line text-[#f5b754]"></i>
-      </button>
-
-      <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-300 ease-out z-50">
-        <ul className="divide-y divide-gray-700">
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Abu Dhabi</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Al Ain</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Dubai</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Sharjah</li>
-        </ul>
-      </div>
-    </div>
-
-    {/* 3) Pick-Up Date */}
-    <div
-      className="relative px-4 py-3 flex items-center border-r border-gray-700/60"
-      onClick={openCalendar}
-    >
-      <DatePicker
-        selected={pickUpDate}
-        onChange={(date) => setPickUpDate(date)}
-        dateFormat="dd/MM/yyyy"
-        placeholderText="Pick-Up Date"
-        ref={pickUpRef}
-        className={`bg-transparent text-white outline-none cursor-pointer w-full ${!pickUpDate ? 'text-gray-400' : ''}`}
-        calendarClassName="dark-datepicker"
-        popperPlacement="bottom-start"
-      />
-      <i className="ri-calendar-line text-[#f5b754] pointer-events-none ml-3"></i>
-    </div>
-
-    {/* 4) Drop-Off Location (dropdown) */}
-    <div className="relative px-4 py-3 group border-r border-gray-700/60">
-      <button className="flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754] transition">
-        <span>Drop-Off Location</span>
-        <i className="ri-map-pin-line text-[#f5b754]"></i>
-      </button>
-
-      <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-300 ease-out z-50">
-        <ul className="divide-y divide-gray-700">
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Abu Dhabi</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Al Ain</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Dubai</li>
-          <li className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer">Sharjah</li>
-        </ul>
-      </div>
-    </div>
-
-    {/* 5) Return Date */}
-    <div
-      className="relative px-4 py-3 flex items-center"
-      onClick={openReturnCalendar}
-    >
-      <DatePicker
-        selected={returnDate}
-        onChange={(date) => setReturnDate(date)}
-        dateFormat="dd/MM/yyyy"
-        placeholderText="Return Date"
-        ref={returnRef}
-        className={`bg-transparent text-white outline-none cursor-pointer w-full ${!returnDate ? 'text-gray-400' : ''}`}
-        calendarClassName="dark-datepicker"
-        popperPlacement="bottom-start"
-      />
-      <i className="ri-calendar-line text-[#f5b754] pointer-events-none ml-3"></i>
-    </div>
-
-    {/* 6) Search Button */}
-    <div className="col-span-1 flex items-center justify-center lg:justify-end px-4">
-      <button
-        onClick={() => {
-          /* You can hook this to your search handler:
-             e.g. handleSearch({ carType, pickupLoc, pickUpDate, dropLoc, returnDate })
-             Currently UI-only, keep your app's search logic as needed. */
-        }}
-        className="bg-[#f5b754] text-black font-semibold px-6 py-3 rounded-full w-full sm:w-auto hover:bg-white hover:-translate-y-1 transition-all duration-300 shadow-md font-bricolage flex items-center justify-center gap-2"
-      >
-        <i className="ri-search-line"></i>
-        Search
-      </button>
-    </div>
-
-  </div>
-</div>
 
     </div>
 
@@ -350,42 +389,68 @@ function Index() {
         {/* Booking Section */}
         <div className='book-option bg-[#151515]/90 backdrop-blur-lg text-white w-[90%] max-w-[1200px] mx-auto rounded-3xl px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 shadow-2xl border border-[#2a2a2a]'>
           
-          {/* Car Type */}
-          <div className='relative w-full lg:w-auto px-4 py-3 group border-r border-gray-700/60'>
-            <button className='flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754] transition'>
-              Choose Car Type
+           {/* Car Type */}
+          <div className="relative px-4 py-3 border-r border-gray-700/60">
+            <button
+              className="flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754]"
+              onClick={() => setIsCarOpen(!isCarOpen)}
+            >
+              <span>{carType || "Car Type"}</span>
               <i className="ri-arrow-down-s-line text-[#f5b754]"></i>
             </button>
-            <div className='absolute top-[110%] left-0 w-48 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-lg opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-300 ease-out z-50'>
-              <ul className='divide-y divide-gray-700'>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Sports Cars</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>SUVs</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Convertible Cars</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Luxury Cars</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Sedan</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Small Cars</li>
-              </ul>
-            </div>
+
+            {isCarOpen && (
+              <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md z-50">
+                <ul className="divide-y divide-gray-700">
+                  {["Sedan", "SUV", "Convertible", "Luxury", "Compact"].map((type) => (
+                    <li
+                      key={type}
+                      onClick={() => { setCarType(type); setIsCarOpen(false); }}
+                      className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer"
+                    >
+                      {type}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           </div>
 
           {/* Pick-Up Location */}
-          <div className='relative w-full lg:w-auto px-4 py-3 group border-r border-gray-700/60'>
-            <button className='flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754] transition'>
-              Pick-Up Location
-              <i className="ri-arrow-down-s-line text-[#f5b754]"></i>
+          <div className="relative px-4 py-3 border-r border-gray-700/60">
+            
+            <button
+              className="flex items-center w-full justify-between text-gray-300 hover:text-[#f5b754]"
+              onClick={() => setIsPickupOpen(!isPickupOpen)}
+            >
+              <span>{pickupLocation || "Pick-Up Location"}</span>
+              <i className="ri-map-pin-line text-[#f5b754]"></i>
             </button>
-            <div className='absolute top-[110%] left-0 w-48 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-lg opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-300 ease-out z-50'>
-              <ul className='divide-y divide-gray-700'>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Abu Dhabi</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Alain</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Dubai</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Sharjah</li>
-              </ul>
-            </div>
+
+            {isPickupOpen && (
+              <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md z-50">
+                <ul className="divide-y divide-gray-700">
+                  {["Abu Dhabi", "Al Ain", "Dubai", "Sharjah"].map((loc) => (
+                    <li
+                      key={loc}
+                      onClick={() => { setPickupLocation(loc); setIsPickupOpen(false); }}
+                      className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer"
+                    >
+                      {loc}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           </div>
 
-          {/* Pick-Up Date */}
-          <div className='relative w-full lg:w-auto px-4 py-3 flex items-center border-r border-gray-700/60' onClick={openCalendar}>
+          {/* 3) Pick-Up Date */}
+          <div
+            className="relative px-4 py-3 flex items-center border-r border-gray-700/60"
+            onClick={openCalendar}
+          >
             <DatePicker
               selected={pickUpDate}
               onChange={(date) => setPickUpDate(date)}
@@ -393,30 +458,46 @@ function Index() {
               placeholderText="Pick-Up Date"
               ref={pickUpRef}
               className={`bg-transparent text-white outline-none cursor-pointer w-full ${!pickUpDate ? 'text-gray-400' : ''}`}
-              calendarClassName='dark-datepicker'
-              popperPlacement='bottom-start'
+              calendarClassName="light-datepicker"
+              popperPlacement="bottom-start"
             />
-            <i className='ri-calendar-line text-[#f5b754] pointer-events-none text-lg'></i>
+            <i className="ri-calendar-line text-[#f5b754] pointer-events-none ml-3"></i>
           </div>
 
           {/* Drop-Off Location */}
-          <div className='relative w-full lg:w-auto px-4 py-3 group border-r border-gray-700/60'>
-            <button className='flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754] transition'>
-              Drop-Off Location
-              <i className="ri-arrow-down-s-line text-[#f5b754]"></i>
+          <div className="relative px-4 py-3 border-r border-gray-700/60">
+
+            <button
+              className="flex items-center w-full justify-between text-gray-300 hover:text-[#f5b754]"
+              onClick={() => setIsDropOpen(!isDropOpen)}
+            >
+              <span>{dropLocation || "Drop-Off Location"}</span>
+              <i className="ri-map-pin-line text-[#f5b754]"></i>
             </button>
-            <div className='absolute top-[110%] left-0 w-48 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-lg opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible transition-all duration-300 ease-out z-50'>
-              <ul className='divide-y divide-gray-700'>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Abu Dhabi</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Alain</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Dubai</li>
-                <li className='px-4 py-2 hover:bg-[#f5b754] hover:text-black transition cursor-pointer'>Sharjah</li>
-              </ul>
-            </div>
+
+            {isDropOpen && (
+              <div className="absolute top-[110%] left-0 w-56 bg-[#1f1f1f] border border-[#f5b754] rounded-md shadow-md z-50">
+                <ul className="divide-y divide-gray-700">
+                  {["Abu Dhabi", "Al Ain", "Dubai", "Sharjah"].map((loc) => (
+                    <li
+                      key={loc}
+                      onClick={() => { setDropLocation(loc); setIsDropOpen(false); }}
+                      className="px-4 py-2 hover:bg-[#f5b754] hover:text-black cursor-pointer"
+                    >
+                      {loc}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           </div>
 
-          {/* Return Date */}
-          <div className='relative w-full lg:w-auto px-4 py-3 flex items-center border-r border-gray-700/60' onClick={openReturnCalendar}>
+          {/* 5) Return Date */}
+          <div
+            className="relative px-4 py-3 flex items-center"
+            onClick={openReturnCalendar}
+          >
             <DatePicker
               selected={returnDate}
               onChange={(date) => setReturnDate(date)}
@@ -424,18 +505,32 @@ function Index() {
               placeholderText="Return Date"
               ref={returnRef}
               className={`bg-transparent text-white outline-none cursor-pointer w-full ${!returnDate ? 'text-gray-400' : ''}`}
-              calendarClassName='dark-datepicker'
-              popperPlacement='bottom-start'
+              calendarClassName="light-datepicker"
+              popperPlacement="bottom-start"
             />
-            <i className='ri-calendar-line text-[#f5b754] pointer-events-none text-lg'></i>
+            <i className="ri-calendar-line text-[#f5b754] pointer-events-none ml-3"></i>
           </div>
 
-          {/* Search Button */}
-          <div className='flex items-center justify-center'>
-            <button className='bg-[#f5b754] text-black font-semibold px-8 py-4 rounded-full w-full hover:bg-white hover:-translate-y-1 transition-all duration-300 shadow-md font-bricolage'>
-              <i className="ri-search-line pr-2"></i>Search
-            </button>
-          </div>
+          {/* 6) Search Button */}
+          <button
+            onClick={() => {
+              console.log({
+                carType,
+                pickupLocation,
+                pickUpDate,
+                dropLocation,
+                returnDate
+              });
+
+              alert("Search Triggered! Check console for selected values.");
+            }}
+            className="bg-[#f5b754] text-black font-semibold px-6 py-3 rounded-full 
+            w-full sm:w-auto hover:bg-white hover:-translate-y-1 transition-all 
+            duration-300 shadow-md font-bricolage flex items-center justify-center gap-2"
+          >
+            <i className="ri-search-line"></i>
+            Search
+          </button>
 
         </div>
       </div>
@@ -1040,6 +1135,77 @@ function Index() {
             </div>
           </div>
         </SwiperSlide>
+
+        <SwiperSlide>
+          <div className="group rounded-2xl overflow-hidden bg-transparent transition-all duration-300 hover:-translate-y-3">
+            <div className="relative overflow-hidden">
+              <img src={newsCar5} alt="EV Future" className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-all duration-500"></div>
+            </div>
+
+            <div className="mt-8 px-5">
+              <div className="relative bg-[#1d1d1d] text-white p-6 rounded-2xl shadow-lg transition-all duration-500 group-hover:shadow-[#f5b754]/30">
+                <span className='absolute -top-4 left-5 bg-[#f5b754] text-black text-xs font-semibold px-3 py-1 rounded-md shadow-md'>
+                  July 02, 2025
+                </span>
+
+                <div className='text-xs text-[#f5b754] mb-3 flex gap-4 items-center'>
+                  <span className='flex items-center gap-1'><i className="ri-user-line text-sm"></i>Sophia R</span>
+                  <span className='flex items-center gap-1'><i className="ri-folder-line text-sm"></i>Electric</span>
+                </div>
+
+                <h3 className='text-xl font-semibold text-white leading-snug mb-2 hover:text-[#f5b754] transition'>
+                  Electric Luxury Cars: The Silent Revolution Begins
+                </h3>
+
+                <p className='text-gray-400 text-sm mb-4'>
+                  Explore how high-end EVs are redefining performance, sustainability, and premium travel experiences worldwide.
+                </p>
+
+                <a href="#" className='w-10 h-10 opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 rounded-full border border-[#f5b754] flex items-center justify-center transition-all duration-500 hover:bg-[#f5b754]'>
+                  <i className="ri-arrow-right-up-line text-[#f5b754] group-hover:text-black transition duration-300"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+  <div className="group rounded-2xl overflow-hidden bg-transparent transition-all duration-300 hover:-translate-y-3">
+    <div className="relative overflow-hidden">
+      <img src={newsCar6} alt="Supercar Trends" className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-all duration-500"></div>
+    </div>
+
+    <div className="mt-8 px-5">
+      <div className="relative bg-[#1d1d1d] text-white p-6 rounded-2xl shadow-lg transition-all duration-500 group-hover:shadow-[#f5b754]/30">
+        <span className='absolute -top-4 left-5 bg-[#f5b754] text-black text-xs font-semibold px-3 py-1 rounded-md shadow-md'>
+          May 28, 2025
+        </span>
+
+        <div className='text-xs text-[#f5b754] mb-3 flex gap-4 items-center'>
+          <span className='flex items-center gap-1'><i className="ri-user-line text-sm"></i>Michael T</span>
+          <span className='flex items-center gap-1'><i className="ri-folder-line text-sm"></i>Supercars</span>
+        </div>
+
+        <h3 className='text-xl font-semibold text-white leading-snug mb-2 hover:text-[#f5b754] transition'>
+          Why Supercar Rentals Are Booming in 2025
+        </h3>
+
+        <p className='text-gray-400 text-sm mb-4'>
+          Demand for exotic rentals is at an all-time high — discover what’s driving the hype behind modern supercar culture.
+        </p>
+
+        <a href="#" className='w-10 h-10 opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 rounded-full border border-[#f5b754] flex items-center justify-center transition-all duration-500 hover:bg-[#f5b754]'>
+          <i className="ri-arrow-right-up-line text-[#f5b754] group-hover:text-black transition duration-300"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+        </SwiperSlide>
+
+
+
       </Swiper>
     </div>
 

@@ -7,7 +7,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "2 Bages",
-    "price": "750",
+    "price": "100",
     "carType": "Sports Car"
   },
   {
@@ -18,7 +18,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "3 Bages",
-    "price": "880",
+    "price": "125",
     "carType": "Luxury Cars"
   },
   {
@@ -29,7 +29,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "3 Bages",
-    "price": "680",
+    "price": "180",
     "carType": "SUV"
   },
   {
@@ -40,7 +40,7 @@
     "passengers": "7",
     "transmission": "auto",
     "Bages": "4 Bages",
-    "price": "620",
+    "price": "80",
     "carType": "SUV"
   },
   {
@@ -51,7 +51,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "4 Bages",
-    "price": "950",
+    "price": "95",
     "carType": "Luxury Cars"
   },
   {
@@ -62,7 +62,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "5 Bages",
-    "price": "1200",
+    "price": "120",
     "carType": "Luxury Cars"
   },
   {
@@ -73,7 +73,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "4 Bages",
-    "price": "700",
+    "price": "125",
     "carType": "SUV"
   },
   {
@@ -84,7 +84,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "3 Bages",
-    "price": "890",
+    "price": "90",
     "carType": "SUV"
   },
   {
@@ -95,7 +95,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "3 Bages",
-    "price": "640",
+    "price": "75",
     "carType": "SUV"
   },
   {
@@ -106,7 +106,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "3 Bages",
-    "price": "710",
+    "price": "200",
     "carType": "Sports Car"
   },
   {
@@ -117,7 +117,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "3 Bages",
-    "price": "640",
+    "price": "80",
     "carType": "SUV"
   },
   {
@@ -128,7 +128,7 @@
     "passengers": "5",
     "transmission": "auto",
     "Bages": "3 Bages",
-    "price": "710",
+    "price": "110",
     "carType": "Sports Car"
   }
 ]

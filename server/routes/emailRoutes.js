@@ -102,18 +102,26 @@ router.post("/book-car", async (req, res) => {
     /* -------------------------------------------
        1️⃣ EMAIL TO YOU (ADMIN)
     --------------------------------------------*/
-    const adminMail = {
+    const formattedPickUp = pickUpDate ? new Date(pickUpDate).toLocaleDateString() : "";
+    const formattedReturn = returnDate ? new Date(returnDate).toLocaleDateString() : "";
+
+    await transporter.sendMail({
       from: `"Mavelo Rentals" <${process.env.SMTP_USER}>`,
       to: process.env.SMTP_USER,
       subject: `📌 New Car Booking: ${carName}`,
       html: `
         <h2>New Car Booking Request</h2>
+
         <p><strong>Name:</strong> ${fullName}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone}</p>
+
+        <h2>Car Details</h2>
         <p><strong>Car Selected:</strong> ${carName} (${carType})</p>
         <p><strong>Price Per Day:</strong> $${carPrice}</p>
         <br/>
+
+        <h2>Rental Details</h2>
         <p><strong>Pick-Up Location:</strong> ${pickUpLocation}</p>
         <p><strong>Drop-Off Location:</strong> ${dropOffLocation}</p>
         <p><strong>Pick-Up Date:</strong> ${pickUpDate}</p>
@@ -121,12 +129,12 @@ router.post("/book-car", async (req, res) => {
         <br/>
         <p><strong>Notes:</strong> ${notes || "None"}</p>
       `,
-    };
+    });
 
     /* -------------------------------------------
        2️⃣ EMAIL TO CUSTOMER (FULL BOOKING SUMMARY)
     --------------------------------------------*/
-    const customerMail = {
+    await transporter.sendMail({
       from: `"Mavelo Rentals" <${process.env.SMTP_USER}>`,
       to: email,
       subject: `🚗 Booking Confirmation – ${carName}`,
@@ -160,19 +168,13 @@ router.post("/book-car", async (req, res) => {
           <p>${notes || "No additional notes provided."}</p>
 
           <hr style="border:0;border-top:1px solid #ccc; margin:15px 0;" />
-
           <p>We will contact you shortly with further instructions!</p>
-
           <p>Warm regards,<br/><strong>The Mavelo Rentals Team</strong></p>
         </div>
       `,
-    };
-
-    // Send both emails
-    await transporter.sendMail(adminMail);
-    await transporter.sendMail(customerMail);
-
+    });
     return res.json({ success: true });
+    
   } catch (error) {
     console.error("Booking email error:", error);
     return res.json({ success: false, error: error.message });
