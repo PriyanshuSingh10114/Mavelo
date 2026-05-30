@@ -37,7 +37,8 @@ Mavelo is a modern, responsive, and dynamic web application designed to streamli
 - **Authentication:** Cookie-parser, CORS, bcrypt, jsonwebtoken
 
 ---
-
+Live Link: https://mavelo.onrender.com
+---
 ## 📂 Project Structure
 
 ```text
