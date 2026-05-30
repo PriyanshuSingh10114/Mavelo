@@ -144,7 +144,7 @@ function Footer() {
             </div>
             <div>
               <h5 className="font-semibold font-bricolage">Write to us</h5>
-              <p>info@drivora.com</p>
+              <p>info@mavello.com</p>
             </div>
           </div>
 
@@ -155,7 +155,7 @@ function Footer() {
             </div>
             <div>
               <h5 className="font-semibold font-bricolage">Address</h5>
-              <p>Drivora Tower, NH-24, Sitapur</p>
+              <p>Mavello Tower, NH-24, Sitapur</p>
             </div>
           </div>
         </div>
@@ -167,7 +167,7 @@ function Footer() {
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-white mb-3">
                 <a href="/" className="text-4xl font-bold logo font-bricolage">
-                  Dri<span>vora</span>
+                  Mave<span>llo</span>
                 </a>
               </h1>
               <p className="text-[#999] mb-6 md:w-[90%] w-full">
@@ -250,7 +250,7 @@ function Footer() {
         {/* --- Copyright --- */}
         <div className="text-[#999] text-center text-base relative py-6">
           <p className="font-bricolage">
-            © 2025 <span className="text-white">drivora.com</span>. All rights
+            © 2026 <span className="text-white">mavello.com</span>. All rights
             Reserved.
           </p>
         </div>

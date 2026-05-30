@@ -1,7 +1,7 @@
 const mongoose=require('mongoose');
 require('dotenv').config();
 const connectDb=async()=>{
-    mongoose.connect(process.env.MONGO_URL || 'mongodb+srv://ayush:Ayush123@ayushrathi.xscarr7.mongodb.net/').then(()=>{
+    mongoose.connect(process.env.MONGO_URL || 'mongodb+srv://Priyanshu:Priyanshu123@cluster0.tg05ugd.mongodb.net/?appName=Cluster0').then(()=>{
         console.log("Connected to MongoDB");
     });
 }

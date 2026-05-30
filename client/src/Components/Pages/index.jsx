@@ -144,8 +144,12 @@ function Index() {
     {/* Car Type */}
         <div className="relative px-4 py-3 border-r border-gray-700/60">
           <button
+            type="button"
             className="flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754]"
-            onClick={() => setIsCarOpen(!isCarOpen)}
+            onClick={(e)=>{
+              e.stopPropagation();
+              setIsCarOpen(!isCarOpen);
+            }}
           >
             <span>{carType || "Car Type"}</span>
             <i className="ri-arrow-down-s-line text-[#f5b754]"></i>
@@ -392,9 +396,14 @@ function Index() {
            {/* Car Type */}
           <div className="relative px-4 py-3 border-r border-gray-700/60">
             <button
-              className="flex items-center gap-2 w-full justify-between text-gray-300 hover:text-[#f5b754]"
-              onClick={() => setIsCarOpen(!isCarOpen)}
+              type="button"
+              className="flex items-center w-full justify-between text-gray-300 hover:text-[#f5b754]"
+              onClick={(e)=>{
+                e.stopPropagation();
+                setIsDropOpen(!isDropOpen);
+              }}
             >
+
               <span>{carType || "Car Type"}</span>
               <i className="ri-arrow-down-s-line text-[#f5b754]"></i>
             </button>
@@ -619,7 +628,7 @@ function Index() {
                 {/* Action Buttons */}
                 <div className='mt-6 flex justify-between items-center'>
                   <Link to={`/car/${car.id}`}>
-                    <button onClick={scrollTo(0,0)} className='bg-[#f5b754] text-black px-5 py-2 rounded-full text-sm hover:bg-white transition duration-300 shadow-md hover:-translate-y-1 font-bricolage'>
+                    <button onClick={() => window.scrollTo(0,0)} className='bg-[#f5b754] text-black px-5 py-2 rounded-full text-sm hover:bg-white transition duration-300 shadow-md hover:-translate-y-1 font-bricolage'>
                       Details
                     </button>
                   </Link>
