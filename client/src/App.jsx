@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {BrowserRouter as Router,Routes,Route} from 'react-router-dom';
 import './App.css'
 import Nav from './Components/Nav/Nav'
@@ -14,6 +14,33 @@ import Contact from './Components/Pages/Contact';
 import LoginModal from './Components/Pages/LoginModal';
 import MyBookings from './Components/Pages/MyBooking';
 function App() {
+  // Connection health check on mount
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const res = await fetch(`${backendUrl}/api/cars`);
+        if (res.ok) {
+          console.log(
+            '%c✅ SUCCESS: Frontend is connected to the Backend & Database!', 
+            'color: #4CAF50; font-weight: bold; font-size: 14px; padding: 10px; border: 2px solid #4CAF50; border-radius: 5px; background: #e8f5e9;'
+          );
+        } else {
+          console.log(
+            '%c⚠️ WARNING: Backend is reachable, but returned an error status.', 
+            'color: #ff9800; font-weight: bold; font-size: 14px; padding: 10px; border: 2px solid #ff9800; border-radius: 5px; background: #fff3e0;'
+          );
+        }
+      } catch (error) {
+        console.log(
+          '%c❌ ERROR: Frontend could NOT connect to the Backend!', 
+          'color: #F44336; font-weight: bold; font-size: 14px; padding: 10px; border: 2px solid #F44336; border-radius: 5px; background: #ffebee;'
+        );
+      }
+    };
+
+    checkConnection();
+  }, []);
 
   return (
     <Router>

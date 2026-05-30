@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const connectDb=require('../connection/connectDb.js');
-const Car = require('../model/carModel.js');
-const carData=require('../../../Mavelo/client/Cars.json');
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import connectDb from '../connection/connectDb.js';
+import Car from '../model/carModel.js';
+import fs from 'fs';
+
+const carData = JSON.parse(fs.readFileSync('../client/Cars.json', 'utf-8'));
 dotenv.config();
 async function seedCars() {
   try {
