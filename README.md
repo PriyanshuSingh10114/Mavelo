@@ -253,8 +253,6 @@ Stores newsletter subscriptions.
 ## Clone Repository
 
 git clone https://github.com/PriyanshuSingh10114/Mavelo.git
-
->>>>>>> bc6d457b5cf27c255a492296f487567979250a6f
 cd Mavelo
 ```
 
@@ -268,12 +266,8 @@ Navigate to the server directory and install dependencies:
 ---
 
 ## Backend Setup
-
->>>>>>> bc6d457b5cf27c255a492296f487567979250a6f
 cd server
-
 npm install
-<<<<<<< HEAD
 ```
 
 Create a `.env` file in the `server` directory and add the following variables:
@@ -471,4 +465,4 @@ LinkedIn:
 # License
 
 This project is licensed under the MIT License.
->>>>>>> bc6d457b5cf27c255a492296f487567979250a6f
+
