@@ -21,7 +21,7 @@ function Contact() {
     setStatus({ loading: true, message: '' });
 
     try {
-      const response = await fetch("http://localhost:5000/api/email/contact", {
+      const response = await fetch((import.meta.env.VITE_BACKEND_URL || "http://localhost:5000") + "/api/email/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

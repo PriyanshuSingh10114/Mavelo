@@ -1,6 +1,6 @@
-const User = require("../model/userModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import User from '../model/userModel.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 async function handleSignup(req,res){
     const {name,email,password}=req.body;
     // Add your signup logic here (e.g., save user to database)
@@ -64,4 +64,4 @@ function logout(req,res){
 
     res.json({ message: "Logged out successfully" });
 }
-module.exports={handleSignup,handleLogin,getProfile,logout};
+export {handleSignup,handleLogin,getProfile,logout};

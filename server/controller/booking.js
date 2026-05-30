@@ -1,5 +1,5 @@
-const Booking=require('../model/booking.js');
-const Car=require('../model/carModel.js');
+import Booking from '../model/booking.js';
+import Car from '../model/carModel.js';
 async function createBooking(req,res){
     const {carId,startDate,endDate}=req.body;
     if(!carId ||!startDate ||!endDate){
@@ -73,9 +73,9 @@ async function cancelBooking(req,res){
     await booking.save();
     res.status(200).json({message:"Booking cancelled successfully",booking});
 }
-module.exports={
+export {
     createBooking,
     getMyBooking,
     updateBookingStatus,
     cancelBooking,
-}
+};

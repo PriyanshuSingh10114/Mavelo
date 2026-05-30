@@ -23,7 +23,7 @@ function Footer() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/email/subscribe", {
+      const response = await fetch((import.meta.env.VITE_BACKEND_URL || "http://localhost:5000") + "/api/email/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

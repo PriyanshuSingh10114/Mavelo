@@ -1,4 +1,4 @@
-const Car=require('../model/carModel.js');
+import Car from '../model/carModel.js';
 async function addCar(req,res){
     const car=await Car.create(req.body);
     res.status(201).json({message:"Car added successfully",car});
@@ -28,10 +28,10 @@ async function deleteCar(req,res){
     const car=await Car.findByIdAndDelete(req.params.id);
     res.status(200).json({message:"Car deleted successfully"});
 }
-module.exports={
+export {
     addCar,
     getAllCars,
     getCarById,
     updateCar,
     deleteCar
-}
+};
