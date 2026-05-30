@@ -68,8 +68,21 @@ Mavelo/
 
 Follow these steps to set up the Mavelo project locally on your machine.
 
-### Prerequisites
+Frontend (React + Vite)
+│
+▼
+REST API (Express.js)
+│
+▼
+MongoDB Database
+│
+▼
+Nodemailer SMTP Service
+│
+▼
+Customer/Admin Email Notifications
 
+<<<<<<< HEAD
 Ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (v16.x or higher)
 - [MongoDB](https://www.mongodb.com/) (Local instance or MongoDB Atlas cluster)
@@ -78,16 +91,189 @@ Ensure you have the following installed:
 
 ```bash
 git clone <repository-url>
+=======
+---
+
+# Technology Stack
+
+## Frontend
+
+* React.js
+* Vite
+* React Router DOM
+* Tailwind CSS
+* Framer Motion
+* Axios
+
+## Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* Nodemailer
+* dotenv
+* CORS
+
+## Deployment
+
+Frontend:
+
+* Render
+
+Backend:
+
+* Render
+
+Database:
+
+* MongoDB Atlas
+
+Version Control:
+
+* Git
+* GitHub
+
+---
+
+# Project Structure
+
+Mavelo
+│
+├── client
+│   ├── public
+│   ├── src
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── routes
+│   │   ├── services
+│   │   └── App.jsx
+│   │
+│   └── package.json
+│
+├── server
+│   ├── config
+│   ├── controllers
+│   ├── models
+│   ├── routes
+│   ├── middleware
+│   ├── server.js
+│   └── package.json
+│
+├── README.md
+└── .gitignore
+
+---
+
+# Database Design
+
+## Booking Collection
+
+Booking
+
+* customerName
+* email
+* phone
+* pickupLocation
+* dropLocation
+* pickupDate
+* returnDate
+* vehicleId
+* vehicleName
+* additionalNotes
+* bookingStatus
+* createdAt
+
+## Newsletter Collection
+
+Subscriber
+
+* email
+* subscribedAt
+
+## Contact Collection
+
+Contact
+
+* name
+* email
+* message
+* createdAt
+
+---
+
+# API Endpoints
+
+## Booking APIs
+
+POST /api/bookings
+
+Creates a new booking request.
+
+GET /api/bookings
+
+Returns all booking records.
+
+GET /api/bookings/:id
+
+Returns a specific booking.
+
+---
+
+## Contact APIs
+
+POST /api/contact
+
+Submits customer inquiries.
+
+---
+
+## Newsletter APIs
+
+POST /api/subscribe
+
+Stores newsletter subscriptions.
+
+---
+
+# Security Measures
+
+* Environment variables for secrets
+* SMTP credentials hidden via .env
+* Backend validation checks
+* Error handling middleware
+* CORS protection
+* Input sanitization
+
+---
+
+# Installation Guide
+
+## Clone Repository
+
+git clone https://github.com/PriyanshuSingh10114/Mavelo.git
+
+>>>>>>> bc6d457b5cf27c255a492296f487567979250a6f
 cd Mavelo
 ```
 
+<<<<<<< HEAD
 ### 2. Backend Setup
 
 Navigate to the server directory and install dependencies:
 
 ```bash
+=======
+---
+
+## Backend Setup
+
+>>>>>>> bc6d457b5cf27c255a492296f487567979250a6f
 cd server
+
 npm install
+<<<<<<< HEAD
 ```
 
 Create a `.env` file in the `server` directory and add the following variables:
@@ -160,3 +346,129 @@ Mavelo was designed with an "automotive-first" mindset. The color palettes, typo
 <div align="center">
   <p>Built with ❤️ for car enthusiasts.</p>
 </div>
+=======
+
+Create .env file:
+
+PORT=5000
+
+MONGO_URI=your_mongodb_connection_string
+
+SMTP_USER=your_email
+
+SMTP_PASS=your_app_password
+
+npm run dev
+
+---
+
+## Frontend Setup
+
+cd client
+
+npm install
+
+npm run dev
+
+---
+
+# Environment Variables
+
+Backend
+
+PORT
+
+MONGO_URI
+
+SMTP_USER
+
+SMTP_PASS
+
+JWT_SECRET
+
+Frontend
+
+VITE_API_URL
+
+---
+
+# Challenges Faced
+
+### Email Automation
+
+Handling reliable email delivery using SMTP while ensuring customer and admin notifications were generated correctly.
+
+### State Management
+
+Managing booking state, vehicle selection, and user interactions across multiple pages.
+
+### Deployment
+
+Coordinating frontend and backend deployments while maintaining environment variable security.
+
+### Responsive Design
+
+Ensuring a consistent user experience across mobile, tablet, and desktop devices.
+
+---
+
+# Performance Optimizations
+
+* Lazy component loading
+* Optimized image assets
+* Reusable React components
+* API response optimization
+* Efficient MongoDB queries
+
+---
+
+# Future Enhancements
+
+* User authentication
+* Admin dashboard
+* Payment gateway integration
+* Booking history tracking
+* Vehicle availability calendar
+* Advanced analytics dashboard
+* Role-based access control
+* PDF invoice generation
+* Google Maps integration
+* AI-powered vehicle recommendations
+
+---
+
+# Learning Outcomes
+
+This project demonstrates proficiency in:
+
+* Frontend Development
+* Backend Development
+* REST API Design
+* Database Integration
+* Authentication Concepts
+* Deployment Workflows
+* Git & GitHub Collaboration
+* Responsive UI Development
+* Email Automation
+* Full-Stack Application Architecture
+
+---
+
+# Author
+
+Priyanshu Singh
+
+Full Stack Developer
+
+GitHub:
+https://github.com/PriyanshuSingh10114
+
+LinkedIn:
+(Add LinkedIn Profile)
+
+---
+
+# License
+
+This project is licensed under the MIT License.
+>>>>>>> bc6d457b5cf27c255a492296f487567979250a6f
